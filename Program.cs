@@ -4,7 +4,16 @@ Console.WriteLine("The First C# Program");
 Console.WriteLine("=====================");
 
 #region Strings and String Interpolation
-// Strings.Run();
+// Strings.RemoveTagsFromHtmlString();
+// Strings.GetAllOccurrencesOfSubstring();
+// Strings.GetSubstring();
+// Strings.GenerateRandomPINs(10);
+// Strings.StringNumericFormatting();
+// Strings.NumberFormatting();
+// Strings.PercentageFormatting();
+// Strings.CurrencyFormatting();
+// Strings.StringInterpolation();
+// Strings.StringCompositeFormatting();
 #endregion
 
 #region Numbers and Math Operations
