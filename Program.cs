@@ -58,6 +58,15 @@ Console.WriteLine("=====================");
 // DataTypes.Decimals();
 #endregion
 
+#region Methods
+// Methods.ValidateIPv4Addresses();
+// Methods.ReverseSentences();
+// Methods.RandomizeCountries();
+// Methods.RandomizeUserIds();
+// Methods.CalculateTotalPrices();
+// Methods.GetUserInfoAndCalculateBMI();
+#endregion
+
 Console.WriteLine("-----------------------");
 Console.WriteLine("Press any key to exit.");
 Console.WriteLine("-----------------------");
