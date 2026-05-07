@@ -183,7 +183,9 @@ public static class Methods
     // method that takes user info as a list of key value pairs
     // keys must be Name, Gender, WeightInKg, HeightInCm
     // and returns a dictionary with the same info and calculates the BMI rate and category
-    private static Dictionary<string, string> GetUserInfo(params KeyValuePair<string, string>[] userInfos)
+    private static Dictionary<string, string> GetUserInfo(
+        params KeyValuePair<string, string>[] userInfos
+    )
     {
         // the required keys for the user info
         string[] requiredKeys = ["Name", "Gender", "WeightInKg", "HeightInCm"];
@@ -222,14 +224,50 @@ public static class Methods
         // with the calculated BMI rate and category
         return userInfoDict;
     }
+
+    // simple version of GetUserInfo that takes positional and optional parameters
+    private static Dictionary<string, string> GetUserInfo(
+        string name,
+        string weightInKg,
+        string heightInCm,
+        string gender = "Male",
+        string jobTitle = "Software Engineer"
+    )
+    {
+        // constructing the user info dictionary from the valid provided arguments
+        Dictionary<string, string> userInfoDict = [];
+        userInfoDict["Name"] = name;
+        userInfoDict["Gender"] = gender;
+        userInfoDict["JobTitle"] = jobTitle;
+        userInfoDict["WeightInKg"] = weightInKg;
+        userInfoDict["HeightInCm"] = heightInCm;
+
+        // calculating the BMI rate and category and adding them to the user info dictionary
+        if (
+            double.TryParse(userInfoDict["WeightInKg"], out double weight) &&
+            double.TryParse(userInfoDict["HeightInCm"], out double height)
+        )
+        {
+            double bmiRate = CalculateBMIRate(weight, height);
+            userInfoDict["BMIRate"] = bmiRate.ToString("F2");
+            userInfoDict["BMICategory"] = GetBMICategory(bmiRate);
+        }
+        else
+            throw new ArgumentException("Weight and Height must be valid numbers.");
+
+        // finally return the valid user info dictionary
+        // with the calculated BMI rate and category
+        return userInfoDict;
+    }
+
     // helper method to print the user info in a formatted way
     private static void PrintUserInfo(Dictionary<string, string> userInfo)
     {
-        Console.WriteLine("--------------------");
         Console.WriteLine("User Information:");
         Console.WriteLine("--------------------");
         foreach (var (key, value) in userInfo)
             Console.WriteLine($"{key}: {value}");
+        Console.WriteLine("--------------------");
     }
 
     public static void GetUserInfoAndCalculateBMI()
@@ -246,10 +284,16 @@ public static class Methods
         );
         PrintUserInfo(result);
         result = GetUserInfo(
-            new KeyValuePair<string, string>("Name", "Sara Ali"),
-            new KeyValuePair<string, string>("Gender", "Female"),
-            new KeyValuePair<string, string>("WeightInKg", "60"),
-            new KeyValuePair<string, string>("HeightInCm", "165")
+            name: "Sara Ali", weightInKg: "65", heightInCm: "165",
+            gender: "Female", jobTitle: "Teacher"
+        );
+        PrintUserInfo(result);
+        result = GetUserInfo(
+            name: "Ebraheem Hessen", weightInKg: "90", heightInCm: "174"
+        );
+        PrintUserInfo(result);
+        result = GetUserInfo(
+            name: "Omar Salah", weightInKg: "88", heightInCm: "176", jobTitle: "Software Engineer"
         );
         PrintUserInfo(result);
     }
