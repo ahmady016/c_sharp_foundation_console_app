@@ -67,6 +67,11 @@ Console.WriteLine("=====================");
 // Methods.GetUserInfoAndCalculateBMI();
 #endregion
 
+#region Exceptions
+// Errors.HandleCommonExceptions();
+// Errors.CalculateSumAndAverageOfRange();
+#endregion
+
 Console.WriteLine("-----------------------");
 Console.WriteLine("Press any key to exit.");
 Console.WriteLine("-----------------------");
