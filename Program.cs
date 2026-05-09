@@ -24,6 +24,8 @@ Console.WriteLine("=====================");
 #endregion
 
 #region Loops
+// Loops.RandomlyAssignIdsToEmployees();
+// Loops.RandomlyAssignRoleToUsers();
 // Loops.GetSentencesFromParagraphs();
 // Loops.PrintCities();
 // Loops.GetUserRole();

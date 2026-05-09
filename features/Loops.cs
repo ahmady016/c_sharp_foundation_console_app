@@ -11,6 +11,120 @@ using System.Text;
 
 public static class Loops
 {
+    // random field to generate random numbers
+    private static readonly Random random = new();
+
+    // method to generate random id as
+    // each id is a letter from A to Z and a three-digit number
+    private static string GenerateRandomId()
+    {
+        char letter = Convert.ToChar(random.Next(65, 91));
+        string threeDigitNumber = random.Next(1, 1000).ToString("000");
+        return $"{letter}{threeDigitNumber}";
+    }
+
+    // method to randomly assign ids to employees as
+    // ask the user to enter employee name or 0 to quit
+    // loop util the user enter 0 and generate random id for each employee
+    // finally print list of employees and their ids
+    public static void RandomlyAssignIdsToEmployees()
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("Randomly Assign Ids to Employees:");
+        Console.WriteLine("---------------------");
+
+        Dictionary<string, string> employees = [];
+        string employeeName;
+        do
+        {
+            Console.Write("Enter Employee Name or 0 to quit: ");
+            employeeName = Console.ReadLine()?.Trim() ?? string.Empty;
+            if (employeeName != "0")
+                employees.Add(GenerateRandomId(), employeeName);
+        } while (employeeName != "0");
+
+        Console.WriteLine("---------------------");
+        Console.WriteLine("List of Employees and their Ids:");
+        Console.WriteLine("---------------------");
+        int count = 1;
+        foreach (var (id, name) in employees)
+            Console.WriteLine($"employee#{count++}: {id} -> {name}");
+    }
+
+    // method to randomly assign role to user as
+    // while the user enter y generate random number between 1 and 5
+    // if the random number is 1 assign viewer role
+    // if the random number is 2 assign editor role
+    // if the random number is 3 assign developer role
+    // if the random number is 4 assign manager role
+    // if the random number is 5 assign admin role
+    // finally when the user enter n stop the loop
+    // and print total users count and each role count
+    public static void RandomlyAssignRoleToUsers()
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("Randomly Assign Role to Users:");
+        Console.WriteLine("---------------------");
+
+        int totalUsersCount = 0, viewerCount = 0, editorCount = 0,
+        developerCount = 0, managerCount = 0, adminCount = 0;
+        string userResponse;
+        byte roleNumber;
+        do
+        {
+            Console.Write("would you like to randomly assigned to a role [admin, supervisor, guest]? [y/n]: ");
+            userResponse = Console.ReadLine()?.Trim().ToLower() ?? string.Empty;
+            if (userResponse == "y")
+            {
+                roleNumber = (byte)random.Next(1, 6);
+                totalUsersCount++;
+                switch (roleNumber)
+                {
+                    case 1:
+                        {
+                            viewerCount++;
+                            Console.WriteLine($"user#{totalUsersCount} assigned to viewer role");
+                            break;
+                        }
+                    case 2:
+                        {
+                            editorCount++;
+                            Console.WriteLine($"user#{totalUsersCount} assigned to editor role");
+                            break;
+                        }
+                    case 3:
+                        {
+                            developerCount++;
+                            Console.WriteLine($"user#{totalUsersCount} assigned to developer role");
+                            break;
+                        }
+                    case 4:
+                        {
+                            managerCount++;
+                            Console.WriteLine($"user#{totalUsersCount} assigned to manager role");
+                            break;
+                        }
+                    case 5:
+                        {
+                            adminCount++;
+                            Console.WriteLine($"user#{totalUsersCount} assigned to admin role");
+                            break;
+                        }
+                    default: break;
+                }
+            }
+        } while (userResponse != "n");
+
+        Console.WriteLine("---------------------");
+        Console.WriteLine($"total users: {totalUsersCount}");
+        Console.WriteLine($"viewer count: {viewerCount}");
+        Console.WriteLine($"editor count: {editorCount}");
+        Console.WriteLine($"developer count: {developerCount}");
+        Console.WriteLine($"manager count: {managerCount}");
+        Console.WriteLine($"admin count: {adminCount}");
+        Console.WriteLine("---------------------");
+    }
+
     // method to get all sentences from an array of paragraphs
     // using nested loops, IndexOf() Substring() and Join() methods
     // to extract array of all paragraphs sentences and print them
