@@ -69,6 +69,14 @@ Console.WriteLine("=====================");
 // Methods.GetUserInfoAndCalculateBMI();
 #endregion
 
+#region Dates And Times
+// await DatesAndTimes.SimulateFileDownloadTimer();
+// await DatesAndTimes.CountDownFrom(25);
+// DatesAndTimes.CalculateEmployeeExperience();
+// DatesAndTimes.CalculatePersonAge();
+// DatesAndTimes.ShowCurrentDateAndTime();
+#endregion
+
 #region Exceptions
 // Errors.HandleCommonExceptions();
 // Errors.CalculateSumAndAverageOfRange();
