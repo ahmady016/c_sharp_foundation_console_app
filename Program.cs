@@ -61,6 +61,7 @@ Console.WriteLine("=====================");
 #endregion
 
 #region Methods
+// Methods.CalculateEmployeeSalary();
 // Methods.ValidateIPv4Addresses();
 // Methods.ReverseSentences();
 // Methods.RandomizeCountries();

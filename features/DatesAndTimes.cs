@@ -1,7 +1,7 @@
 public static class DatesAndTimes
 {
     // method to calculate years passed from the given iso data string
-    private static int CalculateElapsedYears(string isoDateString)
+    public static int CalculateElapsedYears(string isoDateString)
     {
         // 1. Parse the ISO string (e.g., "1990-05-24")
         if (!DateTime.TryParse(isoDateString, out DateTime startDate))

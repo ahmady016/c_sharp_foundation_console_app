@@ -270,6 +270,7 @@ public static class Methods
         Console.WriteLine("--------------------");
     }
 
+    // method to get user info and calculate BMI
     public static void GetUserInfoAndCalculateBMI()
     {
         Console.WriteLine("--------------------");
@@ -296,6 +297,127 @@ public static class Methods
             name: "Omar Salah", weightInKg: "88", heightInCm: "176", jobTitle: "Software Engineer"
         );
         PrintUserInfo(result);
+    }
+
+    // method to calculate full-time employee monthly salary
+    // accept base salary and hire date as arguments
+    // if the employee experience is over 10 years he get 3x raise and a bonus of $3000
+    // if the employee experience is between 5 and 10 years he get 2x raise and a bonus of $2000
+    // if the employee experience is between 2 and 4 years he get 1.5x raise and a bonus of $1000
+    // if the employee experience is less than 2 years he don't get a raise and get a bonus of $500
+    // finally return the full-time employee monthly salary
+    public static double CalculateFullTimeEmployeeSalary(double baseSalary, string hireDate)
+    {
+        int experience;
+        try
+        {
+            experience = DatesAndTimes.CalculateElapsedYears(hireDate);
+        }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            return -1;
+        }
+        double raise, bonus;
+        switch (experience)
+        {
+            case >= 10: raise = 3; bonus = 3000; break;
+            case >= 5: raise = 2; bonus = 2000; break;
+            case >= 2: raise = 1.5; bonus = 1000; break;
+            default: raise = 1; bonus = 500; break;
+        }
+        return (baseSalary * raise) + bonus;
+    }
+    // method to calculate part-time employee monthly salary
+    // accept hours worked and hire date as arguments
+    // if the employee experience is over 10 years his hourly rate is $100 and a bonus of $3000
+    // if the employee experience is between 5 and 10 years his hourly rate is $70 and a bonus of $2000
+    // if the employee experience is between 2 and 4 years his hourly rate is $50 and a bonus of $1000
+    // if the employee experience is less than 2 years his hourly rate is $25 and a bonus of $500
+    // finally return the part-time employee monthly salary
+    public static double CalculatePartTimeEmployeeSalary(double hoursWorked, string hireDate)
+    {
+        int experience;
+        try
+        {
+            experience = DatesAndTimes.CalculateElapsedYears(hireDate);
+        }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            return -1;
+        }
+        double rate, bonus;
+        switch (experience)
+        {
+            case >= 10: rate = 100; bonus = 3000; break;
+            case >= 5: rate = 70; bonus = 2000; break;
+            case >= 2: rate = 50; bonus = 1000; break;
+            default: rate = 25; bonus = 500; break;
+        }
+        return (hoursWorked * rate) + bonus;
+    }
+
+    // method to calculate employee salary as
+    // loop till the user enters n to exit
+    // in each loop accept the employee name, hire date and employee type as input
+    // if the employee type is full-time ask for the base salary
+    // if the employee type is part-time ask for the hours worked
+    // based on the employee type call the appropriate salary calculation method
+    // throw an exception if the employee type is invalid
+    // finally print the employee name, experience and salary
+    public static void CalculateEmployeeSalary()
+    {
+        Console.WriteLine("--------------------");
+        Console.WriteLine("Calculating Employee Salary...");
+        Console.WriteLine("--------------------");
+
+        string userResponse, employeeName, employeeHireDate, employeeType;
+        double baseSalary, hoursWorked, salary;
+        int experience;
+        do
+        {
+            try
+            {
+                Console.Write("Enter employee name: ");
+                employeeName = Console.ReadLine()?.Trim() ?? string.Empty;
+
+                Console.Write("Enter employee hire date (yyyy-mm-dd): ");
+                employeeHireDate = Console.ReadLine()?.Trim() ?? string.Empty;
+
+                Console.Write("Enter employee type (full-time, part-time): ");
+                employeeType = Console.ReadLine()?.Trim() ?? string.Empty;
+                switch (employeeType)
+                {
+                    case "full-time":
+                        Console.Write("Enter employee base salary: ");
+                        baseSalary = Convert.ToDouble(Console.ReadLine()?.Trim() ?? string.Empty);
+                        salary = CalculateFullTimeEmployeeSalary(baseSalary, employeeHireDate);
+                        break;
+                    case "part-time":
+                        Console.Write("Enter employee hours worked: ");
+                        hoursWorked = Convert.ToDouble(Console.ReadLine()?.Trim() ?? string.Empty);
+                        salary = CalculatePartTimeEmployeeSalary(hoursWorked, employeeHireDate);
+                        break;
+                    default: throw new ArgumentException($"Invalid employee type: {employeeType}.");
+                }
+                experience = DatesAndTimes.CalculateElapsedYears(employeeHireDate);
+                Console.WriteLine("--------------------");
+                Console.WriteLine($"Employee Name: {employeeName}\nExperience: {experience}\nSalary: {salary}");
+                Console.WriteLine("--------------------");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+
+            Console.Write("Do you want to calculate another employee salary? [y/n]: ");
+            userResponse = Console.ReadLine()?.Trim().ToLower() ?? string.Empty;
+        } while( userResponse != "n");
+
+        Console.WriteLine("--------------------");
+        Console.WriteLine("Calculating Employee Salary Completed Successfully.");
+        Console.WriteLine("--------------------");
     }
 
 }
