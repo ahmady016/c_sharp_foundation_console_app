@@ -79,4 +79,166 @@ public static class Conditions
         Console.WriteLine($"Remaining days: {remainingDays}");
         Console.WriteLine($"{resultMessage} {discountMessage}");
     }
+
+    // method to calculate the total price after discount
+    // first collect user name
+    // collect the price of each 3 products
+    // check if the product01 is the most expensive then give him 66% discount
+    // check if the product02 price is the most expensive then give him 50% discount
+    // check if the product03 price is the most expensive then give him 33% discount
+    // finally print the total const before and after discount
+    public static void TotalPriceCalculator()
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("Total Price Calculator");
+        Console.WriteLine("---------------------");
+        try
+        {
+            Console.Write("Enter your name: ");
+            string username = Console.ReadLine()?.Trim() ?? string.Empty;
+            if(string.IsNullOrEmpty(username))
+                throw new ArgumentNullException("you must enter your name");
+
+            bool isProduct01PriceValid, isProduct02PriceValid,isProduct03PriceValid;
+            Console.Write("Enter the price of product#1: ");
+            isProduct01PriceValid = double.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out double product01Price);
+            Console.Write("Enter the price of product#2: ");
+            isProduct02PriceValid = double.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out double product02Price);
+            Console.Write("Enter the price of product#3: ");
+            isProduct03PriceValid = double.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out double product03Price);
+            if(!isProduct01PriceValid || !isProduct02PriceValid || !isProduct03PriceValid)
+                throw new ArgumentException("you must enter #3 product prices");
+
+            double total_before_discount = product01Price + product02Price + product03Price;
+            double total_after_discount, discountRate;
+            if(product01Price > product02Price && product01Price > product03Price)
+            {
+                Console.WriteLine("product#1 is the most expensive and you will get 66% discount");
+                discountRate = 0.33;
+            }
+            else if(product02Price > product01Price && product02Price > product03Price)
+            {
+                Console.WriteLine("product#2 is the most expensive and you will get 50% discount");
+                discountRate = 0.5;
+            }
+            else if(product03Price > product01Price && product03Price > product02Price)
+            {
+                Console.WriteLine("product#3 is the most expensive and you will get 66% discount");
+                discountRate = 0.66;
+            }
+            else
+            {
+                Console.WriteLine("all 3 products have the same price and there is no discount");
+                discountRate = 0.0;
+            }
+            total_after_discount = total_before_discount - (total_before_discount * discountRate);
+
+            Console.WriteLine("------------------");
+            Console.WriteLine($"Total Before Discount: {total_before_discount:F2}");
+            Console.WriteLine($"Total After Discount: {total_after_discount:F2}");
+            Console.WriteLine("------------------");
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // method to give the customer a feedback based on his rate as
+    // collect the user name and a rate from 1 to 10
+    // if the rate is 8 or more then print "thank you very much"
+    // and if the rate is between 5 and 7 print "we will work hard to improve"
+    // finally if the rate is less than 5 print "we are sorry to hear that"
+    public static void CustomerFeedback()
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("Customer Feedback on His Review Rate");
+        Console.WriteLine("---------------------");
+        try
+        {
+
+            Console.Write("Enter your name: ");
+            string username = Console.ReadLine()?.Trim() ?? string.Empty;
+            if(string.IsNullOrEmpty(username))
+                throw new ArgumentNullException("you must enter your name");
+
+            Console.Write("Enter your review rate from 1 to 10: ");
+            bool isValidRate = byte.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out byte customerRate);
+            if(!isValidRate)
+                throw new ArgumentException("your review rate must be a number between 1 and 10");
+
+            string feedbackMessage = customerRate switch
+            {
+                >=8 => "Thank you very much",
+                >=5 and <=7 => "We will work hard to improve",
+                _ => "We are sorry to hear that"
+            };
+
+            Console.WriteLine("---------------------");
+            Console.WriteLine($"{feedbackMessage} {username}");
+            Console.WriteLine("---------------------");
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // method to give the user learning recommendation of C# programming language
+    // collect the user name and ask him if he want to read a book [yes, no]
+    // if the user wants to read a book ask him his current level [beginner, intermediate, advanced]
+    // if the current level is beginner recommend [C# Foundation] book
+    // if the current level is intermediate recommend [Head First C#] book
+    // if the current level is advanced recommend [Domain Driven Design Distilled] book
+    // if the user does not want to read a book recommend [C# Crash Course] video
+    public static void CSharpLearningRecommendation()
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("Customer Feedback on His Review Rate");
+        Console.WriteLine("---------------------");
+        try
+        {
+            Console.Write("Enter your name: ");
+            string username = Console.ReadLine()?.Trim() ?? string.Empty;
+            if(string.IsNullOrEmpty(username))
+                throw new ArgumentNullException("you must enter your name");
+
+            Console.Write("Do you want to read a book? [yes/no]: ");
+            string isReadingBook = Console.ReadLine()?.Trim().ToLower() ?? string.Empty;
+            if(string.IsNullOrEmpty(isReadingBook) || (isReadingBook != "yes" && isReadingBook != "no"))
+                throw new ArgumentException("only [yes or no] are allowed");
+
+            string message;
+            if(isReadingBook == "yes")
+            {
+                Console.Write("Enter your current level [beginner, intermediate, advanced]: ");
+                string userLevel = Console.ReadLine()?.Trim().ToLower() ?? string.Empty;
+                if(
+                    string.IsNullOrEmpty(userLevel) ||
+                    (userLevel != "beginner" && userLevel != "intermediate" && userLevel != "advanced")
+                )
+                    throw new ArgumentException("only [beginner, intermediate, advanced] are allowed");
+
+                message = userLevel switch
+                {
+                    "beginner" => "you should read the (C# Foundation) book",
+                    "intermediate" => "you should read the (Head First C#) book",
+                    "advanced" => "you should read the (Domain Driven Design Distilled) book",
+                    _ => ""
+                };
+            }
+            else
+            {
+                message = "you should watch (C# Crash Course) youtube video";
+            }
+            Console.WriteLine("------------------------");
+            Console.WriteLine($"Hi {username}, {message}");
+            Console.WriteLine("------------------------");
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
 }

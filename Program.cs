@@ -17,6 +17,9 @@ Console.WriteLine("=====================");
 #endregion
 
 #region Booleans and Logical Operations
+// Conditions.CSharpLearningRecommendation();
+// Conditions.CustomerFeedback();
+// Conditions.TotalPriceCalculator();
 // Conditions.BooleanEvaluations();
 // Conditions.ShowOddOrEven();
 // Conditions.DiceRollingGame();
