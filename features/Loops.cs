@@ -332,7 +332,7 @@ public static class Loops
 
         string username, password;
         int attempts = 1;
-        while(attempts <= MAX_ATTEMPTS)
+        while (attempts <= MAX_ATTEMPTS)
         {
             Console.WriteLine($"Attempt #{attempts} of {MAX_ATTEMPTS}:");
             Console.WriteLine("------------------");
@@ -340,12 +340,12 @@ public static class Loops
             username = Console.ReadLine()?.Trim().ToLower() ?? string.Empty;
             Console.Write("Enter your password: ");
             password = Console.ReadLine()?.Trim().ToLower() ?? string.Empty;
-            if(username == USERNAME && password == PASSWORD)
+            if (username == USERNAME && password == PASSWORD)
             {
                 Console.WriteLine("Successful Login, Welcome Admin");
                 break;
             }
-            else if(attempts < MAX_ATTEMPTS)
+            else if (attempts < MAX_ATTEMPTS)
                 Console.WriteLine("Invalid username or password try again");
             else
                 Console.WriteLine("Opps you reached 3 attempts and you are not the admin");
@@ -356,15 +356,15 @@ public static class Loops
 
     private static (string username, string mobileNumber) GetUsernameAndMobileNumber()
     {
-            Console.Write("Enter your name: ");
-            string username = Console.ReadLine()?.Trim() ?? string.Empty;
-            if(string.IsNullOrEmpty(username))
-                throw new ArgumentNullException("you must enter your name");
+        Console.Write("Enter your name: ");
+        string username = Console.ReadLine()?.Trim() ?? string.Empty;
+        if (string.IsNullOrEmpty(username))
+            throw new ArgumentNullException("you must enter your name");
 
-            Console.Write("Enter your mobile number: ");
-            string mobileNumber = Console.ReadLine()?.Trim() ?? string.Empty;
-            if(string.IsNullOrEmpty(mobileNumber))
-                throw new ArgumentNullException("you must enter your mobile number");
+        Console.Write("Enter your mobile number: ");
+        string mobileNumber = Console.ReadLine()?.Trim() ?? string.Empty;
+        if (string.IsNullOrEmpty(mobileNumber))
+            throw new ArgumentNullException("you must enter your mobile number");
 
         return (username, mobileNumber);
     }
@@ -404,7 +404,7 @@ public static class Loops
                     invalidCharacter = c;
                     break;
                 }
-            if(invalidCharacter != char.MinValue)
+            if (invalidCharacter != char.MinValue)
                 Console.WriteLine($"Hi {username}, the character {invalidCharacter} is invalid in your mobile number");
             else
                 Console.WriteLine($"Hi {username}, your mobile number is ({mobileNumber})");
@@ -415,12 +415,12 @@ public static class Loops
     {
         Console.Write("Enter your name: ");
         string username = Console.ReadLine()?.Trim() ?? string.Empty;
-        if(string.IsNullOrEmpty(username))
+        if (string.IsNullOrEmpty(username))
             throw new ArgumentNullException("you must enter your name");
 
         Console.Write("Enter a sentence: ");
         string sentence = Console.ReadLine()?.Trim() ?? string.Empty;
-        if(string.IsNullOrEmpty(sentence))
+        if (string.IsNullOrEmpty(sentence))
             throw new ArgumentNullException("you must enter a sentence");
 
         return (username, sentence);
@@ -460,7 +460,7 @@ public static class Loops
     {
         Console.Write("Do you want to book a ticket? [y/n]: ");
         string isBookingTicket = Console.ReadLine()?.Trim().ToLower() ?? string.Empty;
-        if(string.IsNullOrEmpty(isBookingTicket) || (isBookingTicket != "y" && isBookingTicket != "n"))
+        if (string.IsNullOrEmpty(isBookingTicket) || (isBookingTicket != "y" && isBookingTicket != "n"))
             throw new ArgumentException("only [y] or [n] are allowed");
         return isBookingTicket == "y";
     }
@@ -483,7 +483,7 @@ public static class Loops
         {
             Console.Write("Enter your name: ");
             string username = Console.ReadLine()?.Trim() ?? string.Empty;
-            if(string.IsNullOrEmpty(username))
+            if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException("you must enter your name");
 
             int ticketsCount = 0;
@@ -505,7 +505,7 @@ public static class Loops
     {
         Console.Write("Enter the best programming language in the world: ");
         string language = Console.ReadLine()?.Trim() ?? string.Empty;
-        if(string.IsNullOrEmpty(language))
+        if (string.IsNullOrEmpty(language))
             throw new ArgumentNullException("you must enter the best programming language in the world");
         return language;
     }
@@ -532,7 +532,7 @@ public static class Loops
         {
             Console.Write("Enter your name: ");
             string username = Console.ReadLine()?.Trim() ?? string.Empty;
-            if(string.IsNullOrEmpty(username))
+            if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException("you must enter your name");
 
             int attempts = 1;
@@ -547,6 +547,71 @@ public static class Loops
                 Console.WriteLine($"Congrats {username}, you guessed it right! in #({attempts}) attempts.");
             else
                 Console.WriteLine($"Sorry {username}, you did not guess the best programming language in #5 tries.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // method to get and validate an item and its price from comma separated string
+    private static (string item, double price) GetItemAndPrice(string input)
+    {
+        string[] inputParts = input.Split(", ", StringSplitOptions.RemoveEmptyEntries);
+
+        if (inputParts.Length != 2)
+            throw new ArgumentException("item and price must be separated by comma and space");
+
+        if(string.IsNullOrEmpty(inputParts[0].Trim()) || string.IsNullOrEmpty(inputParts[1].Trim()))
+            throw new ArgumentException("item and price must not be empty");
+
+        if(!double.TryParse(inputParts[1].Trim(), out double price) || price <= 0)
+            throw new ArgumentException("price must be a number greater than 0");
+
+        return (inputParts[0].Trim(), price);
+    }
+    // method to collect user shopping list with its prices as
+    // collect the user name
+    // collect the user shopping list with its prices in one input separated by comma and space
+    // loop until the user enter 0 to quit
+    // finally calculate the total price of the shopping list
+    // and print the user name, items count and total price
+    public static void ShoppingListCalculator()
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("Welcome to the Shopping List Calculator!");
+        Console.WriteLine("---------------------");
+
+        string username, userResponse;
+        string item; double price;
+        Dictionary<string, double> shoppingList = [];
+        int itemsCount; double totalPrice;
+        try
+        {
+            Console.Write("Enter your name: ");
+            username = Console.ReadLine()?.Trim() ?? string.Empty;
+            if (string.IsNullOrEmpty(username))
+                throw new ArgumentNullException("you must enter your name");
+
+            do
+            {
+                Console.Write("Enter your shopping list with its prices in one input separated by comma and space: ");
+                userResponse = Console.ReadLine()?.Trim() ?? string.Empty;
+                if (string.IsNullOrEmpty(userResponse))
+                    throw new ArgumentNullException("you must enter your shopping list with its prices");
+
+                if(userResponse == "0")
+                    break;
+
+                (item, price) = GetItemAndPrice(userResponse);
+                if(shoppingList.ContainsKey(item))
+                    throw new ArgumentException($"Sorry {item} is already in the list");
+
+                shoppingList.Add(item, price);
+            } while (userResponse != "0");
+
+            (itemsCount, totalPrice) = (shoppingList.Count, shoppingList.Values.Sum());
+            Console.WriteLine($"Hi {username}, you have {itemsCount} items in your shopping list with a total price of {totalPrice}");
         }
         catch (Exception ex)
         {

@@ -28,6 +28,7 @@ Console.WriteLine("=====================");
 #endregion
 
 #region Loops
+// Loops.ShoppingListCalculator();
 // Loops.ProgrammingLanguageGuesser();
 // Loops.TicketBooker();
 // Loops.VowelCounter();
