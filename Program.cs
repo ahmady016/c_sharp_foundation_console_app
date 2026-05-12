@@ -27,6 +27,9 @@ Console.WriteLine("=====================");
 #endregion
 
 #region Loops
+// Loops.MobileNumberChecker();
+// Loops.LoginChecker();
+// Loops.MultiplicationTable();
 // Loops.RandomlyAssignIdsToEmployees();
 // Loops.RandomlyAssignRoleToUsers();
 // Loops.GetSentencesFromParagraphs();

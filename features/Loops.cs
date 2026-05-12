@@ -7,6 +7,7 @@ The do-while statement: conditionally executes its body one or more times.
 The while statement: conditionally executes its body zero or more times.
 */
 
+using System.Globalization;
 using System.Text;
 
 public static class Loops
@@ -184,6 +185,7 @@ public static class Loops
                 Console.WriteLine(city);
         }
     }
+
     // method to loop util the user input a valid role from the list of roles
     // using do - while loop and Trim() and lower() methods to validate the user input
     public static void GetUserRole()
@@ -298,6 +300,115 @@ public static class Loops
 
         string result = heroHealth > 0 ? "Game over! The hero wins!" : "Game over! The monster wins!";
         Console.WriteLine(result);
+    }
+
+    // method to print a table of multiplication using nested loops
+    public static void MultiplicationTable(byte limit = 12)
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("Multiplication Table:");
+        Console.WriteLine("---------------------");
+        for (int i = 1; i <= limit; i++)
+            for (int j = 1; j <= limit; j++)
+                Console.WriteLine($"({i} * {j}) = {i * j}");
+    }
+
+    // method to check for valid username and password as
+    // collect the username and password from the user
+    // the user has only 3 attempts
+    // check if the username is "admin" and the password is "2026"
+    // then print "Successful login, welcome admin" and exit the loop
+    // otherwise print "Invalid username or password" and continue the loop
+    // finally print "You have reached the maximum number of attempts" and exit the loop
+    public static void LoginChecker()
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("Welcome to the Login Checker!");
+        Console.WriteLine("---------------------");
+
+        const string USERNAME = "admin";
+        const string PASSWORD = "2026";
+        const int MAX_ATTEMPTS = 3;
+
+        string username, password;
+        int attempts = 1;
+        while(attempts <= MAX_ATTEMPTS)
+        {
+            Console.WriteLine($"Attempt #{attempts} of {MAX_ATTEMPTS}:");
+            Console.WriteLine("------------------");
+            Console.Write("Enter your username: ");
+            username = Console.ReadLine()?.Trim().ToLower() ?? string.Empty;
+            Console.Write("Enter your password: ");
+            password = Console.ReadLine()?.Trim().ToLower() ?? string.Empty;
+            if(username == USERNAME && password == PASSWORD)
+            {
+                Console.WriteLine("Successful Login, Welcome Admin");
+                break;
+            }
+            else if(attempts < MAX_ATTEMPTS)
+                Console.WriteLine("Invalid username or password try again");
+            else
+                Console.WriteLine("Opps you reached 3 attempts and you are not the admin");
+
+            attempts++;
+        }
+    }
+
+    private static (string username, string mobileNumber) GetUsernameAndMobileNumber()
+    {
+            Console.Write("Enter your name: ");
+            string username = Console.ReadLine()?.Trim() ?? string.Empty;
+            if(string.IsNullOrEmpty(username))
+                throw new ArgumentNullException("you must enter your name");
+
+            Console.Write("Enter your mobile number: ");
+            string mobileNumber = Console.ReadLine()?.Trim() ?? string.Empty;
+            if(string.IsNullOrEmpty(mobileNumber))
+                throw new ArgumentNullException("you must enter your mobile number");
+
+        return (username, mobileNumber);
+    }
+
+    // method to check mobile number as
+    // collect the user name and mobile number
+    // check if the mobile number starts with 01 and has 11 digits
+    // check if the mobile number contains only digits
+    // then print "Valid mobile number"
+    // otherwise print "Invalid mobile number"
+    public static void MobileNumberChecker()
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("Welcome to the Mobile Number Checker!");
+        Console.WriteLine("---------------------");
+
+        string username, mobileNumber;
+        try
+        {
+            (username, mobileNumber) = GetUsernameAndMobileNumber();
+        }
+        catch (ArgumentNullException ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            (username, mobileNumber) = GetUsernameAndMobileNumber();
+        }
+
+        const string DIGITS = "0123456789";
+        char invalidCharacter = char.MinValue;
+        if (!mobileNumber.StartsWith("01") || mobileNumber.Length != 11)
+            Console.WriteLine($"Hi {username}, your mobile number must start with 01 and have 11 digits");
+        else
+        {
+            foreach (char c in mobileNumber)
+                if (!DIGITS.Contains(c))
+                {
+                    invalidCharacter = c;
+                    break;
+                }
+            if(invalidCharacter != char.MinValue)
+                Console.WriteLine($"Hi {username}, the character {invalidCharacter} is invalid in your mobile number");
+            else
+                Console.WriteLine($"Hi {username}, your mobile number is ({mobileNumber})");
+        }
     }
 
 }
