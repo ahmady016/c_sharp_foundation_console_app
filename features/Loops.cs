@@ -456,4 +456,49 @@ public static class Loops
         Console.WriteLine($"Hi {username}, the number of vowels in your sentence is {vowelsCount}\nand the number of constants in your sentence is {constantsCount}.");
     }
 
+    private static bool GetUserResponse()
+    {
+        Console.Write("Do you want to book a ticket? [y/n]: ");
+        string isBookingTicket = Console.ReadLine()?.Trim().ToLower() ?? string.Empty;
+        if(string.IsNullOrEmpty(isBookingTicket) || (isBookingTicket != "y" && isBookingTicket != "n"))
+            throw new ArgumentException("only [y] or [n] are allowed");
+        return isBookingTicket == "y";
+    }
+
+    // method to make a ticket booker as
+    // collect the user name
+    // ask if he want to book a ticket [y/n]
+    // if the user wants to book a ticket print "ticket#01 has been booked"
+    // loop until the user does not want to book a ticket
+    // finally print the user name and the number of tickets he has booked
+    // and if he has not booked any ticket
+    // print "Opps [username], you have not booked any tickets."
+    public static void TicketBooker()
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("Welcome to the Ticket Booker!");
+        Console.WriteLine("---------------------");
+
+        try
+        {
+            Console.Write("Enter your name: ");
+            string username = Console.ReadLine()?.Trim() ?? string.Empty;
+            if(string.IsNullOrEmpty(username))
+                throw new ArgumentNullException("you must enter your name");
+
+            int ticketsCount = 0;
+            while (GetUserResponse())
+                Console.WriteLine($"Ok {username}, ticket#{++ticketsCount} has been booked.");
+
+            string message = ticketsCount > 0
+                ? $"Thanks {username}, you have booked ({ticketsCount}) tickets."
+                : $"Opps {username}, you have not booked any tickets.";
+            Console.WriteLine(message);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
 }
