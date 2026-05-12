@@ -411,4 +411,49 @@ public static class Loops
         }
     }
 
+    public static (string username, string sentence) GetUsernameAndSentence()
+    {
+        Console.Write("Enter your name: ");
+        string username = Console.ReadLine()?.Trim() ?? string.Empty;
+        if(string.IsNullOrEmpty(username))
+            throw new ArgumentNullException("you must enter your name");
+
+        Console.Write("Enter a sentence: ");
+        string sentence = Console.ReadLine()?.Trim() ?? string.Empty;
+        if(string.IsNullOrEmpty(sentence))
+            throw new ArgumentNullException("you must enter a sentence");
+
+        return (username, sentence);
+    }
+    // method to make a vowel counter as
+    // collect the user name and a sentence
+    // count the number of vowels in the sentence
+    // finally print the user name and the number of vowels and constants in the sentence
+    public static void VowelCounter()
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("Welcome to the Vowel Counter!");
+        Console.WriteLine("---------------------");
+
+        string username, sentence;
+        try
+        {
+            (username, sentence) = GetUsernameAndSentence();
+        }
+        catch (ArgumentNullException ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            (username, sentence) = GetUsernameAndSentence();
+        }
+
+        const string VOWELS = "aeiouAEIOU";
+        int vowelsCount = 0, constantsCount;
+        foreach (char c in sentence)
+            if (VOWELS.Contains(c))
+                vowelsCount++;
+        constantsCount = sentence.Length - vowelsCount;
+
+        Console.WriteLine($"Hi {username}, the number of vowels in your sentence is {vowelsCount}\nand the number of constants in your sentence is {constantsCount}.");
+    }
+
 }

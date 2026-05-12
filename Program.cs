@@ -27,6 +27,7 @@ Console.WriteLine("=====================");
 #endregion
 
 #region Loops
+// Loops.VowelCounter();
 // Loops.MobileNumberChecker();
 // Loops.LoginChecker();
 // Loops.MultiplicationTable();
