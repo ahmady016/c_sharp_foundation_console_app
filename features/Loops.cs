@@ -501,4 +501,57 @@ public static class Loops
         }
     }
 
+    private static string GetProgrammingLanguage()
+    {
+        Console.Write("Enter the best programming language in the world: ");
+        string language = Console.ReadLine()?.Trim() ?? string.Empty;
+        if(string.IsNullOrEmpty(language))
+            throw new ArgumentNullException("you must enter the best programming language in the world");
+        return language;
+    }
+    private static bool IsBestProgrammingLanguage(string language, string BEST_LANGUAGE) => language.Equals(BEST_LANGUAGE, StringComparison.OrdinalIgnoreCase);
+
+    // method to guess the best programming language in the world as
+    // collect the user name
+    // ask for the best programming language
+    // the user have only 5 chances to guess the best programming language
+    // if the user guesses the best programming language print
+    // "Congrats [username], you guessed it right! in ([attempts]) attempts."
+    // if the user does not guess the best programming language print
+    // "Sorry [username], you did not guess the right programming language in 5 tries"
+    public static void ProgrammingLanguageGuesser()
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("Welcome to the Programming Language Guesser!");
+        Console.WriteLine("---------------------");
+
+        const int MAX_TRIES = 5;
+        const string BEST_LANGUAGE = "C#";
+        string guessedLanguage;
+        try
+        {
+            Console.Write("Enter your name: ");
+            string username = Console.ReadLine()?.Trim() ?? string.Empty;
+            if(string.IsNullOrEmpty(username))
+                throw new ArgumentNullException("you must enter your name");
+
+            int attempts = 1;
+            guessedLanguage = GetProgrammingLanguage();
+            while (attempts < 5 && !IsBestProgrammingLanguage(guessedLanguage, BEST_LANGUAGE))
+            {
+                Console.WriteLine($"Try again {username} you have only {MAX_TRIES - attempts} tries left");
+                guessedLanguage = GetProgrammingLanguage();
+                attempts++;
+            }
+            if (IsBestProgrammingLanguage(guessedLanguage, BEST_LANGUAGE))
+                Console.WriteLine($"Congrats {username}, you guessed it right! in #({attempts}) attempts.");
+            else
+                Console.WriteLine($"Sorry {username}, you did not guess the best programming language in #5 tries.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
 }
