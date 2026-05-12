@@ -420,4 +420,63 @@ public static class Methods
         Console.WriteLine("--------------------");
     }
 
+    // method to return the person generation from its birth year as:
+    // from 1965 to 1980 is [Gen X]
+    // from 1981 to 1996 is [Gen Y]
+    // from 1997 to 2012 is [Gen Z]
+    // from 2013 to 2024 is [Gen Alpha]
+    // from 2025 to 2039 is [Gen Beta]
+    public static string GetPersonGeneration(int birthYear)
+    {
+        return birthYear switch
+        {
+            >= 1965 and <= 1980 => "Gen X",
+            >= 1981 and <= 1996 => "Gen Y",
+            >= 1997 and <= 2012 => "Gen Z",
+            >= 2013 and <= 2024 => "Gen Alpha",
+            >= 2025 and <= 2039 => "Gen Beta",
+            _ => "Unknown"
+        };
+    }
+    // method that demonstrates person generation as:
+    // loop util the user enter 0 to quit
+    // in each loop accept the person name and birth year
+    // if the person name is empty throw an exception
+    // if the person birth year is invalid throw an exception
+    // finally print the person name, birth year and generation
+    public static void ShowPersonsGenerations()
+    {
+        Console.WriteLine("--------------------");
+        Console.WriteLine("Getting Person Generation...");
+        Console.WriteLine("--------------------");
+
+        string userResponse = string.Empty, personName, generation;
+        do
+        {
+            try
+            {
+                Console.Write("Enter person name: ");
+                personName = Console.ReadLine()?.Trim() ?? string.Empty;
+                if (string.IsNullOrEmpty(personName))
+                    throw new ArgumentNullException("you must enter person name");
+
+                Console.Write("Enter person birth year: ");
+                if (!int.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out int birthYear))
+                    throw new ArgumentException("you must enter a valid birth year");
+
+                generation = GetPersonGeneration(birthYear);
+                Console.WriteLine("--------------------");
+                Console.WriteLine($"Person Name: {personName}\nBirth Year: {birthYear}\nGeneration: {generation}");
+                Console.WriteLine("--------------------");
+
+                Console.Write("Are you want to calculate another person generation? [y/n]: ");
+                userResponse = Console.ReadLine()?.Trim().ToLower() ?? string.Empty;
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        } while (userResponse != "n");
+    }
+
 }
