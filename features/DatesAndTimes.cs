@@ -11,8 +11,8 @@ public static class DatesAndTimes
         DateTime today = DateTime.Today;
         int elapsedYears = today.Year - startDate.Year;
 
-        // 3. Check if the start date has passed this year
-        if ((today.Month < startDate.Month) || (today.Month == startDate.Month && today.Day < startDate.Day))
+        // 3. Check if the start date has not passed this year yet then subtract one year
+        if (today < startDate.AddYears(elapsedYears))
             elapsedYears--;
 
         // 4. Finally, return the elapsed years
@@ -189,16 +189,22 @@ public static class DatesAndTimes
         Console.WriteLine("-----------------------");
         Console.WriteLine("Estimating End DateTime");
         Console.WriteLine("-----------------------");
+        try
+        {
+            Console.Write("Enter Duration in Minutes: ");
+            if(!int.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out int durationInMinutes))
+                throw new ArgumentException("Invalid duration format. Please enter a valid integer.");
 
-        Console.Write("Enter Duration in Minutes: ");
-        if(!int.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out int durationInMinutes))
-            throw new ArgumentException("Invalid duration format. Please enter a valid integer.");
+            DateTime endDateTimeUtc = EstimateEndDateTimeUTC(durationInMinutes);
+            Console.WriteLine($"Estimated End DateTime: {endDateTimeUtc:yyyy-MM-dd HH:mm} +00:00 - UTC");
 
-        DateTime endDateTimeUtc = EstimateEndDateTimeUTC(durationInMinutes);
-        Console.WriteLine($"Estimated End DateTime: {endDateTimeUtc:yyyy-MM-dd HH:mm} +00:00 - UTC");
-
-        DateTime endDateTimeLocal = TimeZoneInfo.ConvertTimeFromUtc(endDateTimeUtc, TimeZoneInfo.Local);
-        Console.WriteLine($"Estimated End DateTime: {endDateTimeLocal:yyyy-MM-dd HH:mm zzz} - {TimeZoneInfo.Local.Id}");
+            DateTime endDateTimeLocal = TimeZoneInfo.ConvertTimeFromUtc(endDateTimeUtc, TimeZoneInfo.Local);
+            Console.WriteLine($"Estimated End DateTime: {endDateTimeLocal:yyyy-MM-dd HH:mm zzz} - {TimeZoneInfo.Local.Id}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 
     // method to get display name and hoursOffset of a timezone using its id
@@ -258,11 +264,67 @@ public static class DatesAndTimes
         DateTime nowLocal = DateTime.Now;
         Console.WriteLine($"Current Time: {nowLocal:yyyy-MM-dd HH:mm zzz} - {TimeZoneInfo.Local.Id}");
 
-        foreach (var timezoneId in timezonesIds)
+        try
         {
-            DateTime nowInTimezone = ConvertToDestinationTime(timezoneId, nowUtc);
-            (string hoursOffset, string name) = GetTimeZoneNameAndHoursOffset(timezoneId);
-            Console.WriteLine($"Current Time: {nowInTimezone:yyyy-MM-dd HH:mm} {hoursOffset} - {timezoneId} - {name}");
+            foreach (var timezoneId in timezonesIds)
+            {
+                DateTime nowInTimezone = ConvertToDestinationTime(timezoneId, nowUtc);
+                (string hoursOffset, string name) = GetTimeZoneNameAndHoursOffset(timezoneId);
+                Console.WriteLine($"Current Time: {nowInTimezone:yyyy-MM-dd HH:mm} {hoursOffset} - {timezoneId} - {name}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // method to calculate total cost of hotel booking
+    // based on check-in and check-out dates and price per night
+    // accept check-in and check-out dates and price per night
+    // finally return the total cost as double
+    private static double GetTotalCostOfHotelBooking(DateTime checkIn, DateTime checkOut, double pricePerNight)
+    {
+        if (checkOut <= checkIn)
+            throw new ArgumentException("Checkout date must be after check-in.");
+
+        return (checkOut - checkIn).Days * pricePerNight;
+    }
+    // method that demonstrate the use of the CalculateTotalCost method as
+    // collect user name, check-in, check-out dates and price per night
+    // calculate the total cost
+    // finally print the user name, total days of stay and total cost
+    public static void HotelBookingCalculator()
+    {
+        Console.WriteLine("-----------------------");
+        Console.WriteLine("Calculating Total Cost Of Hotel Booking");
+        Console.WriteLine("-----------------------");
+        try
+        {
+            Console.Write("Enter Customer Name: ");
+            string username = Console.ReadLine()?.Trim() ?? string.Empty;
+            if(string.IsNullOrEmpty(username))
+                throw new ArgumentNullException("you must enter your name");
+
+            Console.Write("Enter check-in Date (yyyy-MM-dd): ");
+            if (!DateTime.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out DateTime checkIn))
+                throw new ArgumentException("Invalid check-in date format. Please enter a valid date.");
+
+            Console.Write("Enter check-out Date (yyyy-MM-dd): ");
+            if (!DateTime.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out DateTime checkOut))
+                throw new ArgumentException("Invalid check-in date format. Please enter a valid date.");
+
+            Console.Write("Enter Price Per Night: ");
+            if (!double.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out double pricePerNight))
+                throw new ArgumentException("Invalid price format. Please enter a valid number.");
+
+            double totalDays = (checkOut - checkIn).Days;
+            double totalCost = GetTotalCostOfHotelBooking(checkIn, checkOut, pricePerNight);
+            Console.WriteLine($"Hi {username}, your total cost for ({totalDays}) days of stay is: ({totalCost:C2})");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 
