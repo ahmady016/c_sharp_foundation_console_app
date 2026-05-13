@@ -376,4 +376,64 @@ public static class DatesAndTimes
         }
     }
 
+    // method to get the next doses of a medicine as
+    // given the doses per day and doses count
+    // return array of all doses datetime strings
+    private static List<string> GetDosesList(int dosesPerDay = 1, int dosesCount = 5)
+    {
+        if(dosesPerDay <= 0 || dosesCount <= 0)
+            throw new ArgumentException("Doses per day and doses count must be greater than zero.");
+
+        int[] validDosesPerDay = [1, 2, 3, 4, 6, 8, 12];
+        if (!validDosesPerDay.Contains(dosesPerDay))
+            throw new ArgumentException("Doses per day must be 1, 2, 3, 4, 6, 8 or 12.");
+
+        int[] validDosesCount = [..Enumerable.Range(1, 30)];
+        if (!validDosesCount.Contains(dosesCount))
+            throw new ArgumentException("Doses count must be between 1 and 30.");
+
+        DateTime now = DateTime.Now;
+        List<string> doses = [$"dose#01: {now:yyyy-MM-dd hh:mm tt zzz} - {TimeZoneInfo.Local.Id}"];
+        for (int i = 1; i < dosesCount; i++)
+        {
+            DateTime nextDose = now.AddHours(i * (24 / dosesPerDay));
+            doses.Add($"dose#{i+1:00}: {nextDose:yyyy-MM-dd hh:mm tt zzz} - {TimeZoneInfo.Local.Id}");
+        }
+        return doses;
+    }
+    // method to print list of doses of a medicine as
+    // collect username, doses per day and doses count
+    // finally print the username and the list of doses datetime strings
+    public static void PrintDosesList()
+    {
+        Console.WriteLine("-----------------------");
+        Console.WriteLine("Getting Doses List");
+        Console.WriteLine("-----------------------");
+        try
+        {
+            Console.Write("Enter Patient Name: ");
+            string username = Console.ReadLine()?.Trim() ?? string.Empty;
+            if (string.IsNullOrEmpty(username))
+                throw new ArgumentNullException("you must enter your name");
+
+            Console.Write("Enter Doses Per Day: ");
+            if (!int.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out int dosesPerDay))
+                throw new ArgumentException("Invalid doses per day format. Please enter a valid number.");
+
+            Console.Write("Enter Doses Count: ");
+            if (!int.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out int dosesCount))
+                throw new ArgumentException("Invalid doses count format. Please enter a valid number.");
+
+            List<string> doses = GetDosesList(dosesPerDay, dosesCount);
+            Console.WriteLine($"Hi {username}, your doses list is: ");
+            Console.WriteLine("-----------------------");
+            foreach (string dose in doses)
+                Console.WriteLine(dose);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
 }
