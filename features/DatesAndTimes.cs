@@ -328,4 +328,52 @@ public static class DatesAndTimes
         }
     }
 
+    // method to calculate employee working hours as
+    // given start and end times
+    // and return the total working hours and overtime hours as tuple
+    private static (double totalWorkingHours, double totalOvertimeHours) EstimateWorkingHours(DateTime startTime, DateTime endTime)
+    {
+        if(endTime < startTime)
+            throw new ArgumentException("End time must be after start time.");
+
+        double worked = (endTime - startTime).TotalHours;
+        double regularHours = Math.Min(worked, 8);
+        double overtimeHours = Math.Max(worked - 8, 0);
+        return (regularHours, overtimeHours);
+    }
+    // method to calculate employee working and overtime hours as
+    // collect user name, start and end local datetime
+    // calculate the working and overtime hours
+    // finally print the user name, start and end datetime
+    // and total working hours and total overtime hours
+    public static void CalculateEmployeeWorkingHours()
+    {
+        Console.WriteLine("-----------------------");
+        Console.WriteLine("Calculating Employee Working Hours");
+        Console.WriteLine("-----------------------");
+        try
+        {
+            Console.Write("Enter Employee Name: ");
+            string username = Console.ReadLine()?.Trim() ?? string.Empty;
+            if (string.IsNullOrEmpty(username))
+                throw new ArgumentNullException("you must enter your name");
+
+            Console.Write("Enter Start Time (yyyy-MM-dd HH:mm): ");
+            if (!DateTime.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out DateTime startTime))
+                throw new ArgumentException("Invalid start time format. Please enter a valid date and time.");
+
+            Console.Write("Enter End Time (yyyy-MM-dd HH:mm): ");
+            if (!DateTime.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out DateTime endTime))
+                throw new ArgumentException("Invalid end time format. Please enter a valid date and time.");
+
+            (double totalWorkingHours, double totalOvertimeHours) = EstimateWorkingHours(startTime, endTime);
+            Console.WriteLine($"Hi {username}, you signed in from ({startTime:yyyy-MM-dd HH:mm}) to ({endTime:yyyy-MM-dd HH:mm}).");
+            Console.WriteLine($"you worked ({totalWorkingHours:F1}) hours and ({totalOvertimeHours:F1}) hours of overtime.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
 }

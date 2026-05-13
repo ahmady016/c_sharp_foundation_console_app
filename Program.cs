@@ -83,6 +83,7 @@ Console.WriteLine("=====================");
 #endregion
 
 #region Dates And Times
+// DatesAndTimes.CalculateEmployeeWorkingHours();
 // DatesAndTimes.HotelBookingCalculator();
 // DatesAndTimes.EstimateEndDateTime();
 // DatesAndTimes.ShowCurrentDateTimeInTimezones();
