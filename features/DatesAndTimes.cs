@@ -105,4 +105,65 @@ public static class DatesAndTimes
         Console.WriteLine($"Current date and time: {now}");
     }
 
+    // method to log user activity with current date and time
+    // first collect user name and his current activity
+    // finally print the user name and current activity
+    public static void LogUserActivity()
+    {
+        Console.WriteLine("-----------------------");
+        Console.WriteLine("Logging User Activity");
+        Console.WriteLine("-----------------------");
+
+        Console.Write("Enter User Name: ");
+        string userName = Console.ReadLine()?.Trim() ?? string.Empty;
+        Console.Write("Enter User Activity: ");
+        string userActivity = Console.ReadLine()?.Trim() ?? string.Empty;
+        DateTime now = DateTime.UtcNow;
+        Console.WriteLine($"Hi {userName}, you are currently doing: {userActivity}.\nActivity started at: ({now:yyyy-MM-dd HH:mm:ss}) UTC.");
+    }
+
+    // method estimate flight arrival datetime with destination timezone
+    // from the given departure datetime, flight duration in minutes and destination timezone
+    // finally print the estimated arrival datetime
+    public static void EstimateFlightArrivalTime()
+    {
+        Console.WriteLine("-----------------------");
+        Console.WriteLine("Estimating Flight Arrival Time");
+        Console.WriteLine("-----------------------");
+
+        Console.WriteLine("Timezone IDs:");
+        foreach (var timezone in TimeZoneInfo.GetSystemTimeZones())
+            Console.WriteLine($"{timezone.DisplayName} - {timezone.Id}: [{timezone.BaseUtcOffset.Hours} hours]");
+        Console.WriteLine("-----------------------");
+
+        try
+        {
+            Console.Write("Enter Flight Departure Date and Time (yyyy-MM-dd HH:mm): ");
+            if(!DateTime.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out DateTime departureDateTime))
+                throw new ArgumentException("Invalid date format. Please use ISO 8601.");
+
+            Console.Write("Enter Flight Duration in Minutes: ");
+            if(!int.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out int flightDurationInMinutes))
+                throw new ArgumentException("Invalid duration format. Please enter a valid integer.");
+            else if(flightDurationInMinutes <= 0)
+                throw new ArgumentException("Flight duration cannot be zero or negative.");
+
+            Console.Write("Enter Destination Timezone: ");
+            TimeZoneInfo destinationTimezone = TimeZoneInfo.FindSystemTimeZoneById(Console.ReadLine()?.Trim() ?? string.Empty);
+
+            departureDateTime = TimeZoneInfo.ConvertTimeToUtc(departureDateTime);
+            Console.WriteLine($"Flight Departure Time In UTC: {departureDateTime:yyyy-MM-dd HH:mm} - UTC");
+
+            DateTime arrivalDateTime = departureDateTime.AddMinutes(flightDurationInMinutes);
+            Console.WriteLine($"Estimated Flight Arrival Time In UTC: {arrivalDateTime:yyyy-MM-dd HH:mm} - UTC");
+
+            DateTime arrivalDateTimeZone = TimeZoneInfo.ConvertTimeFromUtc(arrivalDateTime, destinationTimezone);
+            Console.WriteLine($"Estimated Flight Arrival Time In Timezone: {arrivalDateTimeZone:yyyy-MM-dd HH:mm} - ({destinationTimezone.BaseUtcOffset.Hours} hours) - {destinationTimezone.Id}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
 }

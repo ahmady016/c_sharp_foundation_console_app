@@ -83,6 +83,8 @@ Console.WriteLine("=====================");
 #endregion
 
 #region Dates And Times
+// DatesAndTimes.EstimateFlightArrivalTime();
+// DatesAndTimes.LogUserActivity();
 // await DatesAndTimes.SimulateFileDownloadTimer();
 // await DatesAndTimes.CountDownFrom(25);
 // DatesAndTimes.CalculateEmployeeExperience();
