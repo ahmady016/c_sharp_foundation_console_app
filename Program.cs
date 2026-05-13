@@ -83,6 +83,8 @@ Console.WriteLine("=====================");
 #endregion
 
 #region Dates And Times
+// DatesAndTimes.EstimateEndDateTime();
+// DatesAndTimes.ShowCurrentDateTimeInTimezones();
 // DatesAndTimes.EstimateFlightArrivalTime();
 // DatesAndTimes.LogUserActivity();
 // await DatesAndTimes.SimulateFileDownloadTimer();

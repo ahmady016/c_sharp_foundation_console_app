@@ -67,7 +67,7 @@ public static class DatesAndTimes
         // Print the starting seconds to begin the countdown
         Console.WriteLine($"Countdown Timer from {totalSeconds} seconds.");
         // Loop until the duration is zero
-        while(duration.TotalSeconds >= 0)
+        while (duration.TotalSeconds >= 0)
         {
             // Clear the line and rewrite the updated time remaining
             Console.Write($"\rTime Remaining: {duration:mm\\:ss}");
@@ -139,13 +139,13 @@ public static class DatesAndTimes
         try
         {
             Console.Write("Enter Flight Departure Date and Time (yyyy-MM-dd HH:mm): ");
-            if(!DateTime.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out DateTime departureDateTime))
+            if (!DateTime.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out DateTime departureDateTime))
                 throw new ArgumentException("Invalid date format. Please use ISO 8601.");
 
             Console.Write("Enter Flight Duration in Minutes: ");
-            if(!int.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out int flightDurationInMinutes))
+            if (!int.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out int flightDurationInMinutes))
                 throw new ArgumentException("Invalid duration format. Please enter a valid integer.");
-            else if(flightDurationInMinutes <= 0)
+            else if (flightDurationInMinutes <= 0)
                 throw new ArgumentException("Flight duration cannot be zero or negative.");
 
             Console.Write("Enter Destination Timezone: ");
@@ -163,6 +163,106 @@ public static class DatesAndTimes
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // method to estimate end DateTime from start DateTime and duration in minutes
+    // accept duration in minutes and start DateTime or current DateTime as default
+    // finally return the estimated end DateTime
+    private static DateTime EstimateEndDateTimeUTC(int durationInMinutes, DateTime startDateTime = default)
+    {
+        if (durationInMinutes <= 0)
+            throw new ArgumentException("duration must be a positive number of minutes.");
+
+        startDateTime = (startDateTime == default)
+            ? DateTime.UtcNow
+            : (startDateTime.Kind != DateTimeKind.Utc)
+                ? TimeZoneInfo.ConvertTimeToUtc(startDateTime)
+                : startDateTime;
+
+        return startDateTime.AddMinutes(durationInMinutes);
+    }
+
+    // method to demonstrate the use of the EstimateEndDateTimeUTC method
+    public static void EstimateEndDateTime()
+    {
+        Console.WriteLine("-----------------------");
+        Console.WriteLine("Estimating End DateTime");
+        Console.WriteLine("-----------------------");
+
+        Console.Write("Enter Duration in Minutes: ");
+        if(!int.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out int durationInMinutes))
+            throw new ArgumentException("Invalid duration format. Please enter a valid integer.");
+
+        DateTime endDateTimeUtc = EstimateEndDateTimeUTC(durationInMinutes);
+        Console.WriteLine($"Estimated End DateTime: {endDateTimeUtc:yyyy-MM-dd HH:mm} +00:00 - UTC");
+
+        DateTime endDateTimeLocal = TimeZoneInfo.ConvertTimeFromUtc(endDateTimeUtc, TimeZoneInfo.Local);
+        Console.WriteLine($"Estimated End DateTime: {endDateTimeLocal:yyyy-MM-dd HH:mm zzz} - {TimeZoneInfo.Local.Id}");
+    }
+
+    // method to get display name and hoursOffset of a timezone using its id
+    // accept the timezone id
+    // finally return the display name and hoursOffset as tuple
+    private static (string displayName, int hoursOffset) GetTimezoneInfo(string timezoneId = "UTC")
+    {
+        TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(timezoneId);
+        return (tz.DisplayName, tz.BaseUtcOffset.Hours);
+    }
+
+    // method to get hoursOffset from timezone id
+    // accept the timezone id
+    // finally return the hoursOffset as string
+    private static (string hoursOffset, string name) GetTimeZoneNameAndHoursOffset(string timezoneId)
+    {
+        if(string.IsNullOrEmpty(timezoneId))
+            throw new ArgumentNullException(nameof(timezoneId));
+
+        string displayName = TimeZoneInfo.FindSystemTimeZoneById(timezoneId).DisplayName;
+        string[] nameParts = displayName.Split(' ');
+        string hoursOffset = nameParts[0];
+        string name = string.Join(' ', nameParts[1..]);
+        return (hoursOffset[4..^1], name);
+    }
+
+    // method to converts a UTC datetime to the destination timezone's local time.
+    // accept the destination timezone id and the UTC datetime or current datetime as default
+    // finally return the converted datetime
+    private static DateTime ConvertToDestinationTime(string timeZoneId = "UTC", DateTime dateTime = default)
+    {
+        if (dateTime == default)
+            dateTime = DateTime.UtcNow;
+        else if (dateTime.Kind != DateTimeKind.Utc)
+            dateTime = TimeZoneInfo.ConvertTimeToUtc(dateTime);
+
+        TimeZoneInfo destinationTz = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+        return TimeZoneInfo.ConvertTimeFromUtc(dateTime, destinationTz);
+    }
+
+    // method to show current datetime in given timezones
+    // accept array of timezones ids
+    // loop throw the array and convert the current datetime in each timezone
+    // finally print the current datetime in utc, local and each timezone
+    public static void ShowCurrentDateTimeInTimezones(params string[] timezonesIds)
+    {
+        Console.WriteLine("-----------------------");
+        Console.WriteLine("Showing Current Time In Different Timezones");
+        Console.WriteLine("-----------------------");
+
+        if(timezonesIds.Length == 0)
+            timezonesIds = [..TimeZoneInfo.GetSystemTimeZones().Select(tz => tz.Id).Shuffle().Take(5)];
+
+        DateTime nowUtc = DateTime.UtcNow;
+        Console.WriteLine($"Current Time: {nowUtc:yyyy-MM-dd HH:mm} +00:00 - UTC");
+
+        DateTime nowLocal = DateTime.Now;
+        Console.WriteLine($"Current Time: {nowLocal:yyyy-MM-dd HH:mm zzz} - {TimeZoneInfo.Local.Id}");
+
+        foreach (var timezoneId in timezonesIds)
+        {
+            DateTime nowInTimezone = ConvertToDestinationTime(timezoneId, nowUtc);
+            (string hoursOffset, string name) = GetTimeZoneNameAndHoursOffset(timezoneId);
+            Console.WriteLine($"Current Time: {nowInTimezone:yyyy-MM-dd HH:mm} {hoursOffset} - {timezoneId} - {name}");
         }
     }
 
