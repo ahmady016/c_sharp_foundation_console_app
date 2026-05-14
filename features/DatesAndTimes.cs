@@ -1,3 +1,18 @@
+/*
+Quick Reference — Common DateTime Operations
+============================================
+Operation           Code
+--------------------------------------------
+Current local       time  DateTime.Now
+Current UTC         timeDateTime.UtcNow
+Add                 time.AddDays() .AddHours() .AddMinutes()
+Difference          (dateA - dateB).TotalDays
+Format              outputDate.ToString("yyyy-MM-dd HH:mm")
+Day of week         date.DayOfWeek
+Convert timezone    TimeZoneInfo.ConvertTimeFromUtc()
+Parse from string   DateTime.Parse() / DateTime.TryParse()
+============================================
+*/
 public static class DatesAndTimes
 {
     // method to calculate years passed from the given iso data string
@@ -544,6 +559,55 @@ public static class DatesAndTimes
             }
             else
                 Console.WriteLine($"✅ {eventName} has already started.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // method to countdown user session expiry as
+    // collect the user name and session duration in minutes
+    // calculate the remaining time from now in minutes and seconds
+    // finally print the user name, loginAt, expiredAt dates
+    // and countdown the remaining time in minutes and seconds
+    public static void UserSessionExpiryCountDown()
+    {
+        Console.WriteLine("-----------------------");
+        Console.WriteLine("User Session Expiry Countdown");
+        Console.WriteLine("-----------------------");
+        try
+        {
+            Console.Write("Enter User Name: ");
+            string userName = Console.ReadLine()?.Trim() ?? string.Empty;
+            if (string.IsNullOrEmpty(userName))
+                throw new ArgumentNullException("you must enter your name");
+
+            Console.Write("Enter Session Duration in minutes: ");
+            if (!int.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out int sessionDuration))
+                throw new ArgumentException("Invalid session duration format. Please enter a valid number.");
+
+            // minimum session duration is 5 minutes
+            sessionDuration = sessionDuration < 5 ? 5 : sessionDuration;
+
+            // set the loggedAt and expiredAt dates
+            DateTime loggedAt = DateTime.Now;
+            DateTime expiredAt = loggedAt.AddMinutes(sessionDuration);
+            // method to check if the session is expired
+            bool IsExpired() => DateTime.Now > expiredAt;
+            // method to calculate the remaining time
+            TimeSpan TimeLeft() => IsExpired() ? TimeSpan.Zero : expiredAt - DateTime.Now;
+
+            Console.WriteLine("-----------------------");
+            Console.WriteLine($"Hi {userName}, you loggedAt: {loggedAt:yyyy-MM-dd HH:mm tt}");
+            Console.WriteLine($"and your session will expire at: {expiredAt:yyyy-MM-dd HH:mm tt}");
+            Console.WriteLine("-----------------------");
+            while (!IsExpired())
+            {
+                Console.Write($"\r🟢 Session Active — Time Remaining: {TimeLeft().Minutes:00}m {TimeLeft().Seconds:00}s.");
+                Thread.Sleep(1000);
+            }
+            Console.WriteLine("\r🔴 Session Expired — Please log in again");
         }
         catch (Exception ex)
         {

@@ -83,7 +83,8 @@ Console.WriteLine("=====================");
 #endregion
 
 #region Dates And Times
-DatesAndTimes.ShowComingUpEventCountdown();
+// DatesAndTimes.UserSessionExpiryCountDown();
+// DatesAndTimes.ShowComingUpEventCountdown();
 // DatesAndTimes.EstimateDeliveryDatesWindow();
 // DatesAndTimes.PrintDosesList();
 // DatesAndTimes.CalculateEmployeeWorkingHours();
