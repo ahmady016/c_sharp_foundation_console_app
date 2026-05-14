@@ -436,4 +436,77 @@ public static class DatesAndTimes
         }
     }
 
+    // method to add the given days within business days
+    // skip weekends for business-day shipping
+    private static DateTime AddBusinessDays(DateTime date, int days)
+    {
+        while (days > 0)
+        {
+            date = date.AddDays(1);
+            if (date.DayOfWeek != DayOfWeek.Friday && date.DayOfWeek != DayOfWeek.Saturday)
+                days--;
+        }
+        return date;
+    }
+    // method to estimate delivery date range as
+    // given order date, min days and max days of delivery
+    // calculate the delivery date range within business days
+    // finally return the earliest and latest delivery dates
+    private static (DateTime earliestDeliveryDate, DateTime latestDeliveryDate) EstimateDeliveryDateRange(
+        DateTime? orderDate = null,
+        int minDays = 1,
+        int maxDays = 3
+    )
+    {
+        if (minDays <= 0 || maxDays <= 0)
+            throw new ArgumentException("Min days and max days must be greater than zero.");
+        if(minDays > maxDays)
+            throw new ArgumentException("Min days must be less than max days.");
+
+        DateTime _orderDate = orderDate ?? DateTime.UtcNow;
+        return (AddBusinessDays(_orderDate, minDays), AddBusinessDays(_orderDate, maxDays));
+    }
+
+    // method to estimate delivery dates window within business days as
+    // collect the customer name, order date, min days and max days of delivery
+    // calculate the delivery dates window range
+    // finally print the customer name, order date, earliest and latest delivery dates
+    public static void EstimateDeliveryDatesWindow()
+    {
+        Console.WriteLine("-----------------------");
+        Console.WriteLine("Estimate Delivery Dates Window");
+        Console.WriteLine("-----------------------");
+        try
+        {
+            Console.Write("Enter Customer Name: ");
+            string customerName = Console.ReadLine()?.Trim() ?? string.Empty;
+            if (string.IsNullOrEmpty(customerName))
+                throw new ArgumentNullException("you must enter your name");
+
+            Console.Write("Enter Order Date (yyyy-MM-dd): ");
+            if (!DateTime.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out DateTime orderDate))
+                throw new ArgumentException("Invalid order date format. Please enter a valid date.");
+
+            Console.Write("Enter Min Days: ");
+            if (!int.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out int minDays))
+                throw new ArgumentException("Invalid min days format. Please enter a valid number.");
+
+            Console.Write("Enter Max Days: ");
+            if (!int.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out int maxDays))
+                throw new ArgumentException("Invalid max days format. Please enter a valid number.");
+
+            (DateTime earliestDeliveryDate, DateTime latestDeliveryDate) = EstimateDeliveryDateRange(orderDate, minDays, maxDays);
+
+            Console.WriteLine("-----------------------");
+            Console.WriteLine($"Hi {customerName}, your order date: {orderDate:yyyy-MM-dd}, your delivery dates window is: ");
+            Console.WriteLine("-----------------------");
+            Console.WriteLine($"Earliest Delivery Date: {earliestDeliveryDate:yyyy-MM-dd}");
+            Console.WriteLine($"Latest Delivery Date: {latestDeliveryDate:yyyy-MM-dd}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
 }
