@@ -509,4 +509,46 @@ public static class DatesAndTimes
         }
     }
 
+    // method to show coming up event countdown
+    // collect the event name and start datetime
+    // calculate the remaining time in days, hours, minutes and seconds
+    // finally print the event name and remaining time in days, hours, minutes and seconds
+    public static void ShowComingUpEventCountdown()
+    {
+        Console.WriteLine("-----------------------");
+        Console.WriteLine("Show Coming Up Event Countdown");
+        Console.WriteLine("-----------------------");
+        try
+        {
+            Console.Write("Enter Event Name: ");
+            string eventName = Console.ReadLine()?.Trim() ?? string.Empty;
+            if (string.IsNullOrEmpty(eventName))
+                throw new ArgumentNullException("you must enter your name");
+
+            Console.Write("Enter Event Start Date and Time (yyyy-MM-dd hh:mm tt): ");
+            if (!DateTime.TryParse(Console.ReadLine()?.Trim() ?? string.Empty, out DateTime eventStartDate))
+                throw new ArgumentException("Invalid start date format. Please enter a valid date.");
+
+            TimeSpan remaining = eventStartDate - DateTime.Now;
+            if(remaining.TotalSeconds > 0)
+            {
+                Console.WriteLine("-----------------------");
+                Console.WriteLine($"⏳ {eventName} starts in:");
+                Console.WriteLine("-----------------------");
+                while(remaining.TotalSeconds > 0)
+                {
+                    Console.Write($"\r{remaining.Days} days {remaining.Hours} hours {remaining.Minutes} minutes {remaining.Seconds} seconds.");
+                    Thread.Sleep(1000);
+                    remaining = remaining.Subtract(TimeSpan.FromSeconds(1));
+                }
+            }
+            else
+                Console.WriteLine($"✅ {eventName} has already started.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
 }
