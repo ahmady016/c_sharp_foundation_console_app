@@ -82,6 +82,10 @@ Console.WriteLine("=====================");
 // Methods.GetUserInfoAndCalculateBMI();
 #endregion
 
+#region Collections
+Collections.ShowRandomNumbersAndIds();
+#endregion
+
 #region Dates And Times
 // DatesAndTimes.UserSessionExpiryCountDown();
 // DatesAndTimes.ShowComingUpEventCountdown();
