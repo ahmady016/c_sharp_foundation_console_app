@@ -334,4 +334,67 @@ public class Collections
         Console.WriteLine("---------------------");
     }
 
+    // method to demonstrate again use collection expression and LINQ query syntax as
+    // given the dictionary<string, string[]> of employees
+    // the key is the employee id like (A215)
+    // and the value is the employee name, job title and annual salary
+    // construct a new dictionary<string, string> of employees sorted by name as
+    // key is the employee id and the value is the "employee name - job title - salary" string
+    // and construct a list of string of employees sorted by name as
+    // "{name} is an employee with id {id}, he worked as {job title} and earns ${salary}"
+    // finally print the list of employees
+    public static void PrintEmployeesInfo()
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("List of Employees with Info:");
+        Console.WriteLine("---------------------");
+
+        // the source dictionary
+        Dictionary<string, string[]> employees = new()
+        {
+            { "A215", ["John Doe", "Developer", "50000"] },
+            { "B123", ["Jane Smith", "Manager", "60000"] },
+            { "C456", ["Alice Johnson", "Designer", "55000"] },
+            { "D789", ["Bob Brown", "Tester", "48000"] },
+            { "E987", ["Eve Davis", "Developer", "52000"] },
+            { "F321", ["Charlie Wilson", "Designer", "56000"] },
+            { "G654", ["David Lee", "Tester", "49000"] },
+            { "H012", ["Emily Clark", "Developer", "53000"] },
+            { "I345", ["Frank Thompson", "Manager", "58000"] },
+            { "J678", ["Grace Young", "Designer", "54000"] }
+        };
+
+        // construct the sorted dictionary
+        var employeesInfoDict =
+            from employeePair in employees
+            let employeeId = employeePair.Key
+            let employeeName = employeePair.Value[0]
+            let employeeInfo = $"{employeeName}, {employeePair.Value[1]}, {employeePair.Value[2]}"
+            orderby employeeName
+            select KeyValuePair.Create(employeeId, employeeInfo);
+
+        Console.WriteLine("The sorted dictionary:");
+        Console.WriteLine("---------------------");
+        foreach (var (employeeId, employeeInfo) in employeesInfoDict)
+            Console.WriteLine($"{employeeId} => {employeeInfo}");
+        Console.WriteLine("---------------------");
+
+        // construct the sorted list
+        string[] employeesInfoList = [..
+            from employeePair in employees
+            let employeeId = employeePair.Key
+            let employeeName = employeePair.Value[0]
+            let jobTitle = employeePair.Value[1]
+            let salary = employeePair.Value[2]
+            orderby employeeName
+            select $"{employeeName} is an employee with id {employeeId}, he worked as {jobTitle} and earns ${salary}"
+        ];
+
+        Console.WriteLine("The sorted list:");
+        Console.WriteLine("---------------------");
+        foreach (var employeeInfo in employeesInfoList)
+            Console.WriteLine($"{employeeInfo}");
+        Console.WriteLine("---------------------");
+    }
+
 }
