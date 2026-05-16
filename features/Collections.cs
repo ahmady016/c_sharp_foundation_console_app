@@ -232,4 +232,75 @@ public class Collections
         }
     }
 
+    // method to get the shopping list item and its price from the user
+    private static string GetShoppingListItemFromUser()
+    {
+        Console.Write("Enter an item and its price separated by comma and space (enter 0 to quit): ");
+        string userResponse = Console.ReadLine()?.Trim() ?? string.Empty;
+        if (string.IsNullOrEmpty(userResponse))
+            throw new ArgumentNullException("you must enter an item and its price separated by comma and space");
+        if (userResponse != "0" && !userResponse.Contains(", "))
+            throw new ArgumentException("you must enter an item and its price separated by comma and space");
+        return userResponse;
+    }
+    // method to get and validate the item price
+    private static double GetItemPrice(string itemPrice)
+    {
+        if(!double.TryParse(itemPrice, out double price) || price <= 0)
+            throw new ArgumentException("price must be a number greater than 0");
+        return price;
+    }
+
+    // method to get the shopping list and calculate its total price as
+    // first collect the user name
+    // loop until the user enter 0 to quit
+    // and collect the shopping list item one by one with its price in one input separated by comma and space
+    // if the item is not in the dictionary add it as key with its price as value
+    // if the item is in the list add sum the given price with the existing one
+    // finally print the user name, items count, total price and average item price
+    public static void ShoppingListCalculator()
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("Welcome to the Shopping List Calculator!");
+        Console.WriteLine("---------------------");
+
+        string username, userResponse;
+        SortedDictionary<string, double> shoppingList = [];
+        int itemsCount; double totalPrice = 0.0, averageItemPrice;
+        try
+        {
+            username = GetUserName();
+            userResponse = GetShoppingListItemFromUser();
+            while (userResponse != "0")
+            {
+                var itemDetails = userResponse.Split(", ", 2, StringSplitOptions.RemoveEmptyEntries);
+                if (!shoppingList.ContainsKey(itemDetails[0]))
+                    shoppingList.Add(itemDetails[0], GetItemPrice(itemDetails[1]));
+                else
+                    shoppingList[itemDetails[0]] += GetItemPrice(itemDetails[1]);
+                userResponse = GetShoppingListItemFromUser();
+            }
+
+            itemsCount = shoppingList.Count;
+            foreach (var (item, price) in shoppingList)
+                totalPrice += price;
+            averageItemPrice = totalPrice / itemsCount;
+
+            Console.WriteLine("---------------------");
+            Console.WriteLine($"Hi {username}, here is your list of items:");
+            Console.WriteLine("---------------------");
+            foreach (var (item, price) in shoppingList)
+                Console.WriteLine($"{item} -> {price}");
+            Console.WriteLine("---------------------");
+            Console.WriteLine($"Items Count: {itemsCount}");
+            Console.WriteLine($"Total Price: {totalPrice}");
+            Console.WriteLine($"Average Item Price: {averageItemPrice}");
+            Console.WriteLine("---------------------");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
 }
