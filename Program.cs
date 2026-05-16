@@ -83,7 +83,8 @@ Console.WriteLine("=====================");
 #endregion
 
 #region Collections
-Collections.PrintEmployeesInfo();
+// Collections.TraineeCoursesAnalysis();
+// Collections.PrintEmployeesInfo();
 // Collections.ListOfNumbers();
 // Collections.ShoppingListCalculator();
 // Collections.ListEmployeesAndJobTitles();

@@ -1,6 +1,7 @@
 public class Collections
 {
     private static readonly Random random = new();
+    private static string Choice(string[] choices) => choices[random.Next(1, choices.Length)];
 
     // method to get a list of random numbers given the desired length
     private static List<int> GetRandomNumbers(int length = 10)
@@ -394,6 +395,67 @@ public class Collections
         Console.WriteLine("---------------------");
         foreach (var employeeInfo in employeesInfoList)
             Console.WriteLine($"{employeeInfo}");
+        Console.WriteLine("---------------------");
+    }
+
+    // method to demonstrate the use of HashSet as
+    // given the COURSES List ["MS Office", "Backend Web", "Frontend Web"]
+    // and the Trainees List ["Ahmed Belal", "Osman Ali", "Ahmed Ali", "Eman Nasr", "Yasser Zeddan", "Ali Nasr", "Yassen Ali", "Osman Hessen", "Ebraheem Salah", "Omar Salah"]
+    // randomly select 7 trainees from the Trainees List to each course HashSet
+    // finally do:
+    // 1- print trainees enrolled in each course
+    // 2- print trainees enrolled in all courses
+    // 3- print trainees enrolled in both "Backend Web" and "Frontend Web"
+    // 4- print trainees enrolled in "Backend Web" or "Frontend Web"
+    // 5- print trainees enrolled in "Backend Web" and not "Frontend Web"
+    // 6- print trainees enrolled in only "Backend Web"
+    public static void TraineeCoursesAnalysis()
+    {
+        string[] TRAINEES = [
+            "Ahmed", "Osman", "Ali", "Eman", "Ramy",
+            "Omar", "Yassen", "Fawzy", "Ebraheem", "Rehab",
+            "Mona", "Adel", "Nader", "Salah", "Yomna"
+        ];
+
+        HashSet<string> officeSet = [];
+        HashSet<string> backendSet = [];
+        HashSet<string> frontendSet = [];
+        foreach(var _ in Enumerable.Range(1, 10))
+        {
+            officeSet.Add(Choice(TRAINEES));
+            backendSet.Add(Choice(TRAINEES));
+            frontendSet.Add(Choice(TRAINEES));
+        }
+
+        var officeOrBackendOrFrontend = officeSet.Union(backendSet).Union(frontendSet);
+        var officeAndBackendAndFrontend = officeSet.Intersect(backendSet).Intersect(frontendSet);
+        var officeOrFrontend = officeSet.Union(frontendSet);
+        var officeOrBackend = officeSet.Union(backendSet);
+        var backendOrFrontend = backendSet.Union(frontendSet);
+        var backendAndFrontend = backendSet.Intersect(frontendSet);
+        var backendAndNotFrontend = backendSet.Except(frontendSet);
+        var frontendAndNotBackend = frontendSet.Except(backendSet);
+        var officeOnly = officeSet.Except(backendOrFrontend);
+        var backendOnly = backendSet.Except(officeOrFrontend);
+        var frontendOnly = frontendSet.Except(officeOrBackend);
+
+        Console.WriteLine("---------------------");
+        Console.WriteLine("Trainees Courses Analysis:");
+        Console.WriteLine("---------------------");
+        Console.WriteLine($"Office: [{string.Join(", ", officeSet)}]");
+        Console.WriteLine($"Backend: [{string.Join(", ", backendSet)}]");
+        Console.WriteLine($"Frontend: [{string.Join(", ", frontendSet)}]");
+        Console.WriteLine($"Office or Backend or Frontend: [{string.Join(", ", officeOrBackendOrFrontend)}]");
+        Console.WriteLine($"Office and Backend and Frontend: [{string.Join(", ", officeAndBackendAndFrontend)}]");
+        Console.WriteLine($"Office or Frontend: [{string.Join(", ", officeOrFrontend)}]");
+        Console.WriteLine($"Office or Backend: [{string.Join(", ", officeOrBackend)}]");
+        Console.WriteLine($"Backend or Frontend: [{string.Join(", ", backendOrFrontend)}]");
+        Console.WriteLine($"Backend and Frontend: [{string.Join(", ", backendAndFrontend)}]");
+        Console.WriteLine($"Backend and not Frontend: [{string.Join(", ", backendAndNotFrontend)}]");
+        Console.WriteLine($"Frontend and not Backend: [{string.Join(", ", frontendAndNotBackend)}]");
+        Console.WriteLine($"Office only: [{string.Join(", ", officeOnly)}]");
+        Console.WriteLine($"Backend only: [{string.Join(", ", backendOnly)}]");
+        Console.WriteLine($"Frontend only: [{string.Join(", ", frontendOnly)}]");
         Console.WriteLine("---------------------");
     }
 
