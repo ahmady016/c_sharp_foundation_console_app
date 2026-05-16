@@ -55,4 +55,62 @@ public class Collections
         }
     }
 
+    // method to get the user name
+    private static string GetUserName()
+    {
+        Console.Write("Enter your name: ");
+        string userName = Console.ReadLine() ?? string.Empty;
+        if (string.IsNullOrEmpty(userName))
+            throw new ArgumentNullException("you must enter your name");
+        return userName;
+    }
+    // method to get a city from the user
+    private static string GetCityFromUser()
+    {
+        Console.Write("Enter a city you visit (enter 0 to quit): ");
+        string userResponse = Console.ReadLine()?.Trim() ?? string.Empty;
+        if (string.IsNullOrEmpty(userResponse))
+            throw new ArgumentNullException("you must enter a city you visited");
+        return userResponse;
+
+    }
+    // method to list all the cities user was visited as
+    // first collect the user name
+    // loop until the user enter 0 to quit and collect the user visited cities
+    // if the city is not in the list add it to the list
+    // if the city is in the list print "Oops, you visited this city before"
+    // finally print the user name and list of visited cities sorted alphabetically
+    public static void ListVisitedCities()
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("List of Visited Cities");
+        Console.WriteLine("---------------------");
+
+        List<string> visitedCities = [];
+        try
+        {
+            string userName = GetUserName();
+            string userResponse = GetCityFromUser();
+            while (userResponse != "0")
+            {
+                if (!visitedCities.Contains(userResponse, StringComparer.OrdinalIgnoreCase))
+                    visitedCities.Add(userResponse);
+                else
+                    Console.WriteLine("Oops, you visited this city before");
+
+                userResponse = GetCityFromUser();
+            }
+
+            visitedCities.Sort();
+            Console.WriteLine("---------------------");
+            Console.WriteLine($"Hi {userName}, here is your list of visited cities:");
+            Console.WriteLine($"[{string.Join(", ", visitedCities)}]");
+            Console.WriteLine("---------------------");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
 }

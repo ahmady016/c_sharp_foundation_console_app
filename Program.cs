@@ -83,7 +83,8 @@ Console.WriteLine("=====================");
 #endregion
 
 #region Collections
-Collections.ShowRandomNumbersAndIds();
+// Collections.ListVisitedCities();
+// Collections.ShowRandomNumbersAndIds();
 #endregion
 
 #region Dates And Times
