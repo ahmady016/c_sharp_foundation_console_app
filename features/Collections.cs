@@ -303,32 +303,34 @@ public class Collections
         }
     }
 
-    // method to demonstrate how to use Enumerable Range to create a list of numbers
-    // and use collection expressions and LINQ methods to map, filter and reduce the list of numbers as
+    // method to demonstrate how to
+    // use Enumerable Range to create a list of numbers
+    // use collection expressions and LINQ query syntax to map, filter the list of numbers as
     // generate list of numbers between 101 and 999
     // print the list of numbers and its count and sum
     // print the list of odd numbers and its count and sum
     // print the list of even numbers and its count and sum
     public static void ListOfNumbers()
     {
+        List<int> numbers, oddNumbers, evenNumbers;
+        numbers = [..from _ in Enumerable.Range(1, 20) select random.Next(101, 999)];
+        oddNumbers = [..from n in numbers where n % 2 != 0 select n];
+        evenNumbers = [..from n in numbers where n % 2 == 0 select n];
+
         Console.WriteLine("---------------------");
         Console.WriteLine("List of Numbers between 101 and 999:");
         Console.WriteLine("---------------------");
 
-        List<int> numbers, oddNumbers, evenNumbers;
-        numbers = [..from _ in Enumerable.Range(1, 20) select random.Next(101, 999)];
-        oddNumbers = [..numbers.Where(n => n % 2 != 0)];
-        evenNumbers = [..numbers.Where(n => n % 2 == 0)];
-
         Console.WriteLine($"numbers ({numbers.Count}): [{string.Join(", ", numbers)}]");
         Console.WriteLine($"numbers sum: ({numbers.Sum()}) and average: ({numbers.Average()})");
+        Console.WriteLine("---------------------");
 
         Console.WriteLine($"odd numbers ({oddNumbers.Count}): [{string.Join(", ", oddNumbers)}]");
         Console.WriteLine($"odd numbers sum: ({oddNumbers.Sum()}) and average: ({oddNumbers.Average():F2})");
+        Console.WriteLine("---------------------");
 
         Console.WriteLine($"even numbers ({evenNumbers.Count}): [{string.Join(", ", evenNumbers)}]");
         Console.WriteLine($"even numbers sum: ({evenNumbers.Sum()}) and average: ({evenNumbers.Average():F2})");
-
         Console.WriteLine("---------------------");
     }
 
