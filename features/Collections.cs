@@ -113,4 +113,70 @@ public class Collections
         }
     }
 
+    // method to get an employee name from the user
+    private static string GetEmployeeNameFromUser()
+    {
+        Console.Write("Enter an employee name (enter 0 to quit): ");
+        string userResponse = Console.ReadLine()?.Trim() ?? string.Empty;
+        if (string.IsNullOrEmpty(userResponse))
+            throw new ArgumentNullException("you must enter an employee name");
+        return userResponse;
+    }
+    // method to assign employees to departments as
+    // givin the const list of Departments in the company and an empty dictionary
+    // loop until the user enter 0 to quit and collect the employees names one by one
+    // if the employee is not in the dictionary add it and assign a random department
+    // if the employee is in the list print "Oops, this employee already exists"
+    // finally print the list of employees and their departments sorted alphabetically
+    // and print each department and its employees count
+    public static void AssignEmployeesToDepartments()
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("Assign Employees to Departments");
+        Console.WriteLine("---------------------");
+
+        IReadOnlyList<string> DEPARTMENTS = ["IT", "HR", "Sales", "Operations"];
+        Dictionary<string, string> employees = [];
+        try
+        {
+            string userResponse = GetEmployeeNameFromUser();
+            while (userResponse != "0")
+            {
+                if (!employees.ContainsKey(userResponse))
+                    employees.Add(userResponse, DEPARTMENTS[random.Next(0, DEPARTMENTS.Count)]);
+                else
+                    Console.WriteLine("Oops, this employee already exists");
+
+                userResponse = GetEmployeeNameFromUser();
+            }
+
+            Console.WriteLine("---------------------");
+            Console.WriteLine("List of Employees and their Departments:");
+            Console.WriteLine("---------------------");
+            SortedDictionary<string, string> sortedEmployees = new(employees);
+            foreach (var (name, department) in employees)
+                Console.WriteLine($"{name} -> {department}");
+            Console.WriteLine("---------------------");
+
+            Console.WriteLine("---------------------");
+            Console.WriteLine("Departments and their Employees Count:");
+            Console.WriteLine("---------------------");
+            SortedDictionary<string, int> sortedDepartments = [];
+            foreach (var (name, department) in employees)
+            {
+                if(!sortedDepartments.TryGetValue(department, out int value))
+                    sortedDepartments.Add(department, 1);
+                else
+                    sortedDepartments[department] = ++value;
+            }
+            foreach (var (department, count) in sortedDepartments)
+                Console.WriteLine($"{department} => {count}");
+            Console.WriteLine("---------------------");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
 }

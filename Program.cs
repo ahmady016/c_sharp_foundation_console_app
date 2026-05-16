@@ -83,6 +83,7 @@ Console.WriteLine("=====================");
 #endregion
 
 #region Collections
+Collections.AssignEmployeesToDepartments();
 // Collections.ListVisitedCities();
 // Collections.ShowRandomNumbersAndIds();
 #endregion
