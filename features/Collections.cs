@@ -179,4 +179,57 @@ public class Collections
         }
     }
 
+    // method to get the employee name and job title from the user
+    private static string GetEmployeeDetailsFromUser()
+    {
+        Console.Write("Enter an employee name and job title separated by comma and space (enter 0 to quit): ");
+        string userResponse = Console.ReadLine()?.Trim() ?? string.Empty;
+        if (string.IsNullOrEmpty(userResponse))
+            throw new ArgumentNullException("you must enter an employee name and job title separated by comma and space");
+        if( userResponse != "0" && !userResponse.Contains(", "))
+            throw new ArgumentException("you must enter an employee name and job title separated by comma and space");
+        return userResponse;
+    }
+    // method to list employees and their job titles as
+    // create an empty sorted dictionary
+    // loop until the user enter 0 to quit
+    // and collect the employee name and job title in one input separated by comma and space
+    // if the employee is not in the dictionary add it as key with its job title as value
+    // if the employee is in the list print "Oops, this employee already exists"
+    // finally print the user name and list of employees and their job titles sorted alphabetically
+    public static void ListEmployeesAndJobTitles()
+    {
+        Console.WriteLine("---------------------");
+        Console.WriteLine("List of Employees and their Job Titles");
+        Console.WriteLine("---------------------");
+
+        string userResponse;
+        SortedDictionary<string, string> employees = [];
+        try
+        {
+            userResponse = GetEmployeeDetailsFromUser();
+            while (userResponse != "0")
+            {
+                var employeeDetails = userResponse.Split(", ", 2, StringSplitOptions.RemoveEmptyEntries);
+                if (!employees.ContainsKey(employeeDetails[0]))
+                    employees.Add(employeeDetails[0], employeeDetails[1]);
+                else
+                    Console.WriteLine("Oops, this employee already exists");
+
+                userResponse = GetEmployeeDetailsFromUser();
+            }
+
+            Console.WriteLine("---------------------");
+            Console.WriteLine("List of Employees and their Job Titles:");
+            Console.WriteLine("---------------------");
+            foreach (var (name, jobTitle) in employees)
+                Console.WriteLine($"{name} -> {jobTitle}");
+            Console.WriteLine("---------------------");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
 }
