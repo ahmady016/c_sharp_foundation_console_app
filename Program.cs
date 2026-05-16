@@ -83,6 +83,7 @@ Console.WriteLine("=====================");
 #endregion
 
 #region Collections
+Collections.ListOfNumbers();
 // Collections.ShoppingListCalculator();
 // Collections.ListEmployeesAndJobTitles();
 // Collections.AssignEmployeesToDepartments();
