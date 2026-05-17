@@ -70,8 +70,8 @@ public class FilesAndFolders
             if(operationType == "move")
                 File.Delete(srcPath);
             string operation = operationType == "copy" ? "copied" : "moved";
-            string srcPathName = srcPath[(BASE_DIRECTORY.Length)..];
-            string destPathName = destPath[(BASE_DIRECTORY.Length)..];
+            string srcPathName = srcPath[BASE_DIRECTORY.Length..];
+            string destPathName = destPath[BASE_DIRECTORY.Length..];
             Console.WriteLine($"{srcPathName} has been {operation} to {destPathName} successfully.");
         }
         catch (Exception ex)
@@ -111,6 +111,57 @@ public class FilesAndFolders
                 Console.Write("Press Enter to quit or any other key to continue: ");
                 userResponse = Console.ReadLine() ?? string.Empty;
             } while (userResponse != string.Empty);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // method to rename a file
+    // accept the file name and the new file name
+    // simply move the file to the same directory but with a new name
+    private static void RenameFile(string filePath, string newFileName)
+    {
+        if (string.IsNullOrEmpty(filePath) || string.IsNullOrEmpty(newFileName))
+            throw new ArgumentException("you must enter the file path and the new file name");
+        if (!File.Exists(filePath))
+            throw new ArgumentException("the file does not exist");
+        try
+        {
+            string directory = Path.GetDirectoryName(filePath) ?? DATA_DIRECTORY;
+            string newFilePath = Path.Combine(directory, newFileName);
+            File.Move(filePath, newFilePath);
+            Console.WriteLine($"{Path.GetFileName(filePath)} has been renamed to {Path.GetFileName(newFilePath)} successfully.");
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // method to renaming all files in the data directory
+    // to convert file names to lower case and replace spaces or dashes with underscores
+    // using LINQ query syntax
+    public static void RenameFilesInDataDirectory()
+    {
+        try
+        {
+            List<FileInfo> files = [..
+                from file in Directory.EnumerateFiles(DATA_DIRECTORY)
+                select new FileInfo(file)
+            ];
+            Console.WriteLine("---------------------");
+            Console.WriteLine("Renaming All Files in the data directory");
+            Console.WriteLine("---------------------");
+            Console.WriteLine($"files count: {files.Count}");
+            Console.WriteLine("---------------------");
+            foreach (var fileInfo in files)
+            {
+                string newFileName = fileInfo.Name.ToLower().Replace(" ", "_").Replace("-", "_");
+                RenameFile(fileInfo.FullName, newFileName);
+            }
+            Console.WriteLine("---------------------");
         }
         catch (Exception ex)
         {
