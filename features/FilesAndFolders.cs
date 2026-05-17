@@ -169,4 +169,55 @@ public class FilesAndFolders
         }
     }
 
+    // method to create new log file with the given content
+    // accept content and the log file name is generated automatically
+    private static void LogToFile(string content)
+    {
+        try
+        {
+            string time = $"{DateTime.Now:yyyy-MM-dd-hh-mm-ss-tt}";
+            string logFile = Path.Combine(LOGS_DIRECTORY, $"file-changed-{time}.log");
+            File.WriteAllText(logFile, content);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+    // method to watch the data folder for new files
+    public static void WatchDataDirectory()
+    {
+        try
+        {
+            // create a file system watcher
+            using var watcher = new FileSystemWatcher(DATA_DIRECTORY, "*.*");
+            // configure the file system watcher
+            watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.CreationTime;
+            watcher.EnableRaisingEvents = true;
+            // create the file system watcher handler
+            static void watcher_handler(object? sender, FileSystemEventArgs e)
+            {
+                string content = $"({Path.GetFileName(e.FullPath)}) file {e.ChangeType} at {DateTime.Now:yyyy-mm-dd hh:mm:ss tt}";
+                Console.WriteLine(content);
+                LogToFile(content);
+            }
+            // register the file system watcher handler to watcher events
+            watcher.Created += watcher_handler;
+            watcher.Renamed += watcher_handler;
+            watcher.Changed += watcher_handler;
+            watcher.Deleted += watcher_handler;
+            // hold the application
+            Console.WriteLine("---------------------");
+            Console.WriteLine("Watching Data Directory for Files Changes");
+            Console.WriteLine("---------------------");
+            Console.WriteLine("Press Any Key to Exit");
+            Console.WriteLine("---------------------");
+            Console.ReadLine();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
 }
