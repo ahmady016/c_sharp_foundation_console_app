@@ -4,9 +4,10 @@ public class FilesAndFolders
     private static readonly string BASE_DIRECTORY = AppDomain.CurrentDomain.BaseDirectory.Replace(@"bin\Debug\net10.0\", "");
     private static readonly string DATA_DIRECTORY = Path.Combine(BASE_DIRECTORY, "data");
     private static readonly string LOGS_DIRECTORY = Path.Combine(BASE_DIRECTORY, "logs");
+    private static readonly string ARCHIVE_DIRECTORY = Path.Combine(BASE_DIRECTORY, "archive");
 
     // method to create log directory and files each time app starts
-    private static void LogAppStart()
+    public static void LogAppStart()
     {
         try
         {
@@ -28,7 +29,6 @@ public class FilesAndFolders
     // using directory.EnumerateFiles() and LINQ query syntax
     public static void ListFilesInfoInDataDirectory()
     {
-        LogAppStart();
         try
         {
             string[] files = [..
@@ -48,6 +48,69 @@ public class FilesAndFolders
             foreach (var fileInfo in files)
                 Console.WriteLine(fileInfo);
             Console.WriteLine("---------------------");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // method to copy, move files
+    // accept the source path and the destination path
+    // and the copy or move operation type as input
+    private static void CopyOrMoveFiles(
+        string srcPath,
+        string destPath,
+        string operationType = "copy"
+    )
+    {
+        try
+        {
+            File.Copy(srcPath, destPath, overwrite: true);
+            if(operationType == "move")
+                File.Delete(srcPath);
+            string operation = operationType == "copy" ? "copied" : "moved";
+            string srcPathName = srcPath[(BASE_DIRECTORY.Length)..];
+            string destPathName = destPath[(BASE_DIRECTORY.Length)..];
+            Console.WriteLine($"{srcPathName} has been {operation} to {destPathName} successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // method to demonstrate copy and move files
+    public static void CopyAndMoveFiles()
+    {
+        string srcFileName, operationType, srcPath, destPath, userResponse;
+        try
+        {
+            do
+            {
+                // get the source file name with extension from user
+                Console.Write("Enter the source file name with extension: ");
+                srcFileName = Console.ReadLine() ?? string.Empty;
+                if (string.IsNullOrEmpty(srcFileName))
+                    throw new ArgumentNullException("you must enter the source file name with extension");
+
+                // get the operation type from user
+                Console.Write("Enter the operation type (copy or move): ");
+                operationType = Console.ReadLine() ?? string.Empty;
+                if (string.IsNullOrEmpty(operationType))
+                    throw new ArgumentNullException("you must enter the operation type");
+                if (operationType != "copy" && operationType != "move")
+                    throw new ArgumentException("invalid operation type");
+
+                // copy programming_roadmap.txt file from data directory to archive directory
+                srcPath = Path.Combine(DATA_DIRECTORY, srcFileName);
+                destPath = Path.Combine(ARCHIVE_DIRECTORY, srcFileName);
+                CopyOrMoveFiles(srcPath, destPath, operationType);
+
+                // get user response to continue or quit
+                Console.Write("Press Enter to quit or any other key to continue: ");
+                userResponse = Console.ReadLine() ?? string.Empty;
+            } while (userResponse != string.Empty);
         }
         catch (Exception ex)
         {

@@ -5,6 +5,7 @@
 
 # data files
 data/
+archive/
 
 # dotenv files
 .env
