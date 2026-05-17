@@ -116,6 +116,10 @@ Console.WriteLine("=====================");
 // Errors.CalculateSumAndAverageOfRange();
 #endregion
 
+#region Files And Folders
+// FilesAndFolders.ListFilesInfoInDataDirectory();
+#endregion
+
 Console.WriteLine("-----------------------");
 Console.WriteLine("Press any key to exit.");
 Console.WriteLine("-----------------------");
