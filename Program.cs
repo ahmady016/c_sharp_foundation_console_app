@@ -117,7 +117,7 @@ Console.WriteLine("=====================");
 #endregion
 
 #region Files And Folders
-// FilesAndFolders.ListFilesInfoInDataDirectory();
+FilesAndFolders.ListFilesInfoInDataDirectory();
 #endregion
 
 Console.WriteLine("-----------------------");
