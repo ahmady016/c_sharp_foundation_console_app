@@ -118,7 +118,8 @@ Console.WriteLine("=====================");
 
 #region Files And Folders
 FilesAndFolders.LogAppStart();
-FilesAndFolders.WatchDataDirectory();
+// FilesAndFolders.ReadOrWriteToTextFile();
+// FilesAndFolders.WatchDataDirectory();
 // FilesAndFolders.RenameFilesInDataDirectory();
 // FilesAndFolders.CopyAndMoveFiles();
 // FilesAndFolders.ListFilesInfoInDataDirectory();
